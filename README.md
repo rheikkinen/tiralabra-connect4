@@ -1,5 +1,5 @@
 # Connect Four tekoäly
-Harjoitustyö, jonka aiheena on Connect Four (tai Neljän suora) -pelille toteutettava tekoäly, jota vastaan voi pelata. Tekoäly toteutetaan minimax-algoritmilla, jota tehostetaan alfa-beta-karsinnalla.
+Harjoitustyö, jonka aiheena on Connect Four -pelille toteutettava tekoäly, jota vastaan voi pelata. Tekoälyn toteutuksessa käytetään minimax-algoritmia, jota tehostetaan alfa-beta-karsinnalla.
 ## Dokumentaatio
 [Määrittelydokumentti](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/maarittelydokumentti.md)
 ## Viikkoraportit
