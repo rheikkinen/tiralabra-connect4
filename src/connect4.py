@@ -19,7 +19,7 @@ class ConnectFour:
         board[row][int(column) - 1] = player
 
     def column_is_available(self, board, column):
-        """Palauttaa True, jos sarakkeen ylin row on vapaa eli arvo on 0. Muuten palauttaa False."""
+        """Palauttaa True, jos sarakkeen ylin rivi on vapaa eli arvo on 0. Muuten palauttaa False."""
         return board[self.ROW_COUNT - 1][int(column) - 1] == 0
 
     def check_horizontal(self, board, latestRow, latestColumn, player):
@@ -64,7 +64,7 @@ class ConnectFour:
             if board[row][col] == player:
                 discs_in_a_row += 1
             if discs_in_a_row == 4:
-                return True    
+                return True
 
         # Vasen alaviisto
         for row, col in zip(range(latestRow - 1, latestRow - 4, -1), range(latestColumn - 1, latestColumn - 4, -1)):
@@ -102,6 +102,12 @@ class ConnectFour:
             or self.check_diagonal(board, latestRow, latestColumn, player) \
             or False
 
+    def valid_input(self, input):
+        for column in self.columnNumbers[0]:
+            if input == f"{column}":
+                return True
+        return False
+
     def start_game(self):
         board = self.init_board(self.ROW_COUNT, self.COL_COUNT)
         # positions pitää kirjaa sarakkeiden täyttöasteesta
@@ -114,18 +120,22 @@ class ConnectFour:
             print("")
             selectedColumn = input(f"Pelaaja {player}, valitse sarake, johon haluat pudottaa kiekon: ")
             print("")
+            if not self.valid_input(selectedColumn):
+                print("Antamasi syöte on virheellinen!\n")
+                continue
 
             if self.column_is_available(board, selectedColumn):
                 # Haetaan positions-muuttujan avulla sarakkeen seuraava vapaa rivi
                 row = positions.count(selectedColumn)
                 self.drop_disc(board, row, selectedColumn, player)
                 positions += selectedColumn
-                state = (state + 1) % 2
 
                 if self.is_winning_move(board, row, selectedColumn, player):
                     print(f"\nPelaaja {player} voitti pelin!\n")
                     self.print_board(board)
 
                     self.game_over = True
+
+                state = (state + 1) % 2
             else:
                 print(f"\nSarake {selectedColumn} on täynnä! Valitse toinen sarake.\n")
