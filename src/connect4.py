@@ -1,14 +1,12 @@
 import numpy as np
 from game_ai import AI
+from constants import ROW_COUNT, COL_COUNT
 
 class ConnectFour:
     def __init__(self):
-        self.ROW_COUNT = 6
-        self.COL_COUNT = 7
-        self.positions = [0]*self.COL_COUNT
+        self.positions = [0]*COL_COUNT
         self.game_over = False
         self.column_numbers = np.array([1,2,3,4,5,6,7], dtype=int, ndmin=2)
-        self.ORDER = {"4": 0, "5": 1, "3": 2, "6": 3, "2": 4, "7": 5, "1": 6}
 
     def init_board(self, rows, columns):
         return np.zeros((rows, columns), dtype=int)
@@ -21,53 +19,53 @@ class ConnectFour:
         board[row][column] = player
 
     def column_is_available(self, board, column):
-        """Palauttaa True, jos sarakkeen ylin rivi on vapaa eli arvo on 0, muuten palauttaa False."""
-        return board[self.ROW_COUNT - 1][column] == 0
+        """Palauttaa True, jos sarake on vapaa eli ylimmän ruudun arvo on 0, muuten palauttaa False."""
+        return board[ROW_COUNT- 1][column] == 0
 
     def board_is_full(self, board):
-        """Jos kaikki sarakkeet ovat täynnä, palauttaa True, muuten palauttaa False."""
+        """Palauttaa True, jos kaikki sarakkeet ovat täynnä, muuten palauttaa False."""
         for column in range(0,7):
             if self.column_is_available(board, column):
                 return False
         return True
 
-    def check_horizontal(self, board, latestRow, latestColumn, player):
+    def check_horizontal(self, board, last_row, last_col, player):
         """Tarkastaa pudotetun kiekon oikealla ja vasemmalla puolella olevat kiekot"""
         discs_in_a_row = 1
         # Aloitetaan tarkastus pudotetun kiekon oikealta puolelta
-        for col in range(latestColumn + 1, latestColumn + 4):
-            if col > 6 or board[latestRow][col] != player:
+        for col in range(last_col + 1, last_col + 4):
+            if col > 6 or board[last_row][col] != player:
                 break
-            if board[latestRow][col] == player:
+            if board[last_row][col] == player:
                 discs_in_a_row += 1
             if discs_in_a_row == 4:
                 return True
 
         # Jatketaan pudotetun kiekon vasemmalta puolelta
-        for col in range(latestColumn - 1, latestColumn - 4, -1):
-            if col < 0 or board[latestRow][col] != player:
+        for col in range(last_col - 1, last_col - 4, -1):
+            if col < 0 or board[last_row][col] != player:
                 break
-            if board[latestRow][col] == player:
+            if board[last_row][col] == player:
                 discs_in_a_row += 1
             if discs_in_a_row == 4:
                 return True
 
-    def check_vertical(self, board, latestRow, latestColumn, player):
+    def check_vertical(self, board, last_row, last_col, player):
         """Tarkastaa pudotetun kiekon alapuolella olevat kiekot"""
         discs_in_a_row = 1
-        for row in range(latestRow - 1, latestRow - 4, -1):
-            if row < 0 or board[row][latestColumn] != player:
+        for row in range(last_row - 1, last_row - 4, -1):
+            if row < 0 or board[row][last_col] != player:
                 break
-            if board[row][latestColumn] == player:
+            if board[row][last_col] == player:
                 discs_in_a_row += 1
             if discs_in_a_row == 4:
                 return True
 
-    def check_diagonal(self, board, latestRow, latestColumn, player):
+    def check_diagonal(self, board, last_row, last_col, player):
         """Tarkastaa vinottaisissa suunnissa olevat kiekot"""
         discs_in_a_row = 1
         # Oikea yläviisto
-        for row, col in zip(range(latestRow + 1, latestRow + 4), range(latestColumn + 1, latestColumn + 4)):
+        for row, col in zip(range(last_row + 1, last_row + 4), range(last_col + 1, last_col + 4)):
             if row > 5 or col > 6 or board[row][col] != player:
                 break
             if board[row][col] == player:
@@ -76,7 +74,7 @@ class ConnectFour:
                 return True
 
         # Vasen alaviisto
-        for row, col in zip(range(latestRow - 1, latestRow - 4, -1), range(latestColumn - 1, latestColumn - 4, -1)):
+        for row, col in zip(range(last_row - 1, last_row - 4, -1), range(last_col - 1, last_col - 4, -1)):
             if row < 0 or col < 0 or board[row][col] != player:
                 break
             if board[row][col] == player:
@@ -86,7 +84,7 @@ class ConnectFour:
 
         discs_in_a_row = 1
         # Vasen yläviisto
-        for row, col in zip(range(latestRow + 1, latestRow + 4), range(latestColumn - 1, latestColumn - 4, -1)):
+        for row, col in zip(range(last_row + 1, last_row + 4), range(last_col - 1, last_col - 4, -1)):
             if row > 5 or col < 0 or board[row][col] != player:
                 break
             if board[row][col] == player:
@@ -95,7 +93,7 @@ class ConnectFour:
                 return True
 
         # Oikea alaviisto
-        for row, col in zip(range(latestRow - 1, latestRow - 4, -1), range(latestColumn + 1, latestColumn + 4)):
+        for row, col in zip(range(last_row - 1, last_row - 4, -1), range(last_col + 1, last_col + 4)):
             if row < 0 or col > 6 or board[row][col] != player:
                 break
             if board[row][col] == player:
@@ -103,18 +101,18 @@ class ConnectFour:
             if discs_in_a_row == 4:
                 return True
 
-    def end_state(self, board, latestRow, latestColumn, player):
-        if self.player_won(board, latestRow, latestColumn, player):
+    def end_state(self, board, last_row, last_col, player):
+        if self.player_won(board, last_row, last_col, player):
             return player # 1 tai 2
         elif self.board_is_full(board): # tasapeli
             return 0
         return None
 
-    def player_won(self, board, latestRow, latestColumn, player):
+    def player_won(self, board, last_row, last_col, player):
         """Tarkastaa, onko viimeksi pudotetun kiekon läheisyydessä neljän suora."""
-        return self.check_horizontal(board, latestRow, latestColumn, player) \
-            or self.check_vertical(board, latestRow, latestColumn, player) \
-            or self.check_diagonal(board, latestRow, latestColumn, player) \
+        return self.check_horizontal(board, last_row, last_col, player) \
+            or self.check_vertical(board, last_row, last_col, player) \
+            or self.check_diagonal(board, last_row, last_col, player) \
             or False
 
     def valid_input(self, input):
@@ -129,7 +127,7 @@ class ConnectFour:
         return False
 
     def start_game(self):
-        board = self.init_board(self.ROW_COUNT, self.COL_COUNT)
+        board = self.init_board(ROW_COUNT, COL_COUNT)
         state = 0
         ai = AI(game=ConnectFour())
         print(f"Tekoäly on pelaaja nro {ai.player}")
