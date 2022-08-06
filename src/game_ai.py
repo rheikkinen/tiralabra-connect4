@@ -5,18 +5,18 @@ from constants import ROW_COUNT, COL_COUNT, ORDER
 class AI:
     def __init__(self, game, level=1, player=2):
         self.level = level
-        self.player = player
+        self.ai_player = player
         self.nodes = 0
-        self.last_row = None
-        self.last_col = None
+        self.row= None
+        self.col = None
         self.game = game
 
     def player(self):
-        return self.player
+        return self.ai_player
 
     def store_last_move(self, row, column):
-        self.last_row = row
-        self.last_col = column
+        self.row = row
+        self.col = column
 
     def get_available_columns(self, board):
         """Palauttaa vapaana olevat sarakkeet listana, joka
@@ -35,8 +35,8 @@ class AI:
 
     def best_column(self, game_board):
         if self.level == 0:
-            # Palauttaa satunnaisen sarakkeen väliltä [0, sarakkeiden_lkm]
-            column = randint(0, )
+            # Palauttaa satunnaisen sarakkeen väliltä [0, sarakkeiden_lkm - 1]
+            column = randint(0, COL_COUNT-1)
 
         if self.level == 1:
             # Asetetaan läpi käytyjen solmujen lukumäärä nollaksi
@@ -44,8 +44,8 @@ class AI:
 
             start_time = time()
 
-            value, column = self.minimax(game_board, self.last_row, self.last_col, depth=4, maximizing=False)
-            
+            value, column = self.minimax(game_board, self.row, self.col, depth=4, maximizing=False)
+
             end_time = time()
 
             print(f"Minimax valitsi sarakkeen {column+1} pisteytyksellä {value}")
@@ -60,18 +60,17 @@ class AI:
         end_state = self.game.end_state(board, last_row, last_col, last_player)
 
         if end_state:
-            if end_state == 1:
+            if end_state == 1: # pelaaja 1 voitti
                 return 10000000, None
-            if end_state == 2:
+            if end_state == 2: # pelaaja 2 voitti
                 return -10000000, None
-            elif end_state == 0: # tasapeli
-                return 0, None
+            return 0, None # tasapeli
 
         if depth == 0:
             value = self.evaluate_board(board, last_player)
             return value, None
 
-        if maximizing:
+        if maximizing: # vastustajan (MAX) vuoro
             max_value = -9999
             valid_columns = self.get_available_columns(board)
             best_column = valid_columns[0]
@@ -91,7 +90,7 @@ class AI:
 
             return max_value, best_column
 
-        elif not maximizing:
+        else: # tekoälyn (MIN) vuoro
             min_value = 9999
             valid_columns = self.get_available_columns(board)
             best_column = valid_columns[0]
@@ -173,7 +172,7 @@ class AI:
                 evaluation_block = [board[row + val][column + val] for val in range(4)]
                 print(evaluation_block)
         """
-        if player == self.player:
+        if player == self.ai_player:
             return -value
 
         return value
