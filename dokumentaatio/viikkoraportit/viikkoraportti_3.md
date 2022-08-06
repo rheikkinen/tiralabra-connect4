@@ -1,4 +1,4 @@
-# Viikko 2
+# Viikko 3
 Projektiin käytetty aika: 21 tuntia
 
 ## Mitä olen tehnyt?
