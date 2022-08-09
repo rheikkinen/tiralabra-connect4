@@ -16,6 +16,9 @@ class GameBoard:
     def reset_board(self):
         self._board = self.init_board(self.rows, self.columns)
 
+    def print_board(self): # UI
+        print(np.flip(self._board, 0))
+
     def get_board(self):
         return self._board
 
@@ -33,13 +36,13 @@ class GameBoard:
         for column in ORDER:
             if self.column_is_available(column):
                 valid_columns.append(column)
-
         return valid_columns
 
     def get_next_available_row(self, column):
         for row in range(ROW_COUNT):
             if self.get_position(row, column) == 0:
                 return row
+        return None
 
     def all_columns_are_filled(self):
         for column in range(COL_COUNT):

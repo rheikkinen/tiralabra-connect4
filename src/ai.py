@@ -9,7 +9,7 @@ class AI:
         self.level = level
         self.ai_player = player
         self.opponent = (player % 2) + 1
-        self.nodes = 0
+        self.nodes_visited = 0
         self.row = None
         self.col = None
 
@@ -27,40 +27,42 @@ class AI:
 
         if self.level == 1:
             # Asetetaan läpi käytyjen solmujen lukumäärä nollaksi
-            self.nodes = 0
+            self.nodes_visited = 0
 
             start_time = time()
 
-            value, column = self.minimax(game_board, self.row, self.col, depth=5, maximizing=False)
+            value, column = self.minimax(game_board, self.row, self.col, depth=4, maximizing=False)
 
             end_time = time()
 
-            print(f"Minimax valitsi sarakkeen {column+1} pisteytyksellä {value}")
-            print(f"Pelipuun solmuja käsitelty: {self.nodes} kpl")
+            print(f"Minimax valitsi sarakkeen {column + 1} pisteytyksellä {value}")
+            print(f"Pelipuun solmuja käsitelty: {self.nodes_visited} kpl")
             print(f"Minimax-algoritmin suoritusaika: {end_time - start_time} sekuntia")
 
         return column
 
     def minimax(self, board: GameBoard, last_row, last_col, depth, maximizing: bool):
-        self.nodes += 1
-        last_player = self.opponent if maximizing else self.ai_player
+        self.nodes_visited += 1
+
+        last_player = self.ai_player if maximizing else self.opponent
+
         end_state = board.end_state(last_row, last_col, last_player)
 
         if end_state:
             if end_state == self.ai_player: # tekoälyn (min) voitto
-                return -10000000, None
-            if end_state == self.opponent: # vastapelaajan (max) voitto
-                return 10000000, None
+                return -10_000_000, None
+            if end_state == self.opponent: # toisen pelaajan (max) voitto
+                return 10_000_000, None
             return 0, None # tasapeli
 
         if depth == 0:
             value = self.evaluate_board(board, last_player)
             return value, None
 
-        if maximizing: # vastustajan (MAX) vuoro
+        if maximizing: # maksimoiva pelaaja
             max_value = -inf
             valid_columns = board.get_available_columns()
-            best_column = valid_columns[0]
+            best_column = None
 
             for column in valid_columns:
                 row = board.get_next_available_row(column)
@@ -78,26 +80,26 @@ class AI:
 
             return max_value, best_column
 
-        else: # tekoälyn (MIN) vuoro
-            min_value = inf
-            valid_columns = board.get_available_columns()
-            best_column = valid_columns[0]
+        # minimoiva pelaaja (tekoäly)
+        min_value = inf
+        valid_columns = board.get_available_columns()
+        best_column = None
 
-            for column in valid_columns:
-                row = board.get_next_available_row(column)
+        for column in valid_columns:
+            row = board.get_next_available_row(column)
 
-                board.update_position(row, column, value=self.ai_player)
+            board.update_position(row, column, value=self.ai_player)
 
-                value = self.minimax(board, row, column, depth-1, maximizing=True)[0]
+            value = self.minimax(board, row, column, depth-1, maximizing=True)[0]
 
-                # Kumotaan siirto
-                board.update_position(row, column, value=0)
+            # Kumotaan siirto
+            board.update_position(row, column, value=0)
 
-                if value < min_value:
-                    min_value = value
-                    best_column = column
+            if value < min_value:
+                min_value = value
+                best_column = column
 
-            return min_value, best_column
+        return min_value, best_column
 
     def evaluate_board(self, board: GameBoard, player):
         """Pisteyttää peliruudukon tilanteen vuorossa olevan pelaajan kannalta"""
