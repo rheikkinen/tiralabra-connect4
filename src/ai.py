@@ -101,11 +101,10 @@ class AI:
 
         return min_value, best_column
 
-    def evaluate_board(self, board: GameBoard, player):
+    def evaluate_board(self, board: GameBoard, player: int):
         """Pisteyttää peliruudukon tilanteen vuorossa olevan pelaajan kannalta"""
 
         value = 0
-        opponent = (player % 2) + 1
 
         # VAAKASUUNTAISET NELJÄN RUUDUN LOHKOT
 
@@ -113,24 +112,7 @@ class AI:
             for column in range(COL_COUNT - 3): # väli on [0, 3] kun COL_COUNT = 7
                 evaluation_block = [board.get_position(row, val) for val in range(column, column+4)]
 
-                player_discs = 0
-                opponent_discs = 0
-                empty_count = 0
-
-                for disc in evaluation_block:
-                    if disc == player:
-                        player_discs +=1
-                    elif disc == opponent:
-                        opponent_discs += 1
-                    else: # ruutu on tyhjä
-                        empty_count += 1
-
-                if player_discs == 3 and empty_count == 1:
-                    value += 10
-                elif player_discs == 2 and empty_count == 2:
-                    value += 4
-                elif opponent_discs == 3 and empty_count == 1:
-                    value -= 10
+                value += self.get_block_value(evaluation_block, player)
 
         # PYSTYSUUNTAISET NELJÄN RUUDUN LOHKOT
 
@@ -138,34 +120,51 @@ class AI:
             for row in range(ROW_COUNT - 3): # väli on [0, 2] kun ROW_COUNT = 6
                 evaluation_block = [board.get_position(val, column) for val in range(row, row + 4)]
 
-                player_discs = 0
-                opponent_discs = 0
-                empty_count = 0
+                value += self.get_block_value(evaluation_block, player)
 
-                for disc in evaluation_block:
-                    if disc == player:
-                        player_discs +=1
-                    elif disc == opponent:
-                        opponent_discs += 1
-                    else: # ruutu on tyhjä
-                        empty_count += 1
-
-                if player_discs == 3 and empty_count == 1:
-                    value += 10
-                elif player_discs == 2 and empty_count == 2:
-                    value += 4
-                elif opponent_discs == 3 and empty_count == 1:
-                    value -= 10
-        """
         # VINOSUUNTAISET NELJÄN RUUDUN LOHKOT
-        print("VINOSUUNTAISET LOHKOT")
-        self.game.print_board(board)
-        for row in range(ROW_COUNT - 3): # rivit väliltä [0, 2]
-            for column in range(COL_COUNT - 4): #sarakkeet väliltä [0, 2]
-                evaluation_block = [board[row + val][column + val] for val in range(4)]
-                print(evaluation_block)
-        """
+
+        # NOUSEVAT SUORAT (/)
+        for row in range(ROW_COUNT - 3): # käy läpi rivit [0, 1, 2]
+            for col in range(COL_COUNT - 3): # käy läpi sarakkeet [0, 1, 2, 3]
+                evaluation_block = [board.get_position(row+val, col+val) for val in range(4)]
+
+                value += self.get_block_value(evaluation_block, player)
+
+        # LASKEVAT SUORAT (\)
+        for row in range(ROW_COUNT - 1, ROW_COUNT - 4, -1): # käy läpi rivit [5, 4, 3]
+            for col in range(COL_COUNT - 3): # käy läpi sarakkeet [0, 1, 2, 3]
+                evaluation_block = [board.get_position(row-val, col+val) for val in range(4)]
+
+                value += self.get_block_value(evaluation_block, player)
+
         if player == self.ai_player:
             return -value
+
+        return value
+
+    def get_block_value(self, evaluation_block: list, player: int):
+        opponent = (player % 2) + 1
+
+        player_discs = 0
+        opponent_discs = 0
+        empty_count = 0
+
+        value = 0
+
+        for disc in evaluation_block:
+            if disc == player:
+                player_discs +=1
+            elif disc == opponent:
+                opponent_discs += 1
+            else: # ruutu on tyhjä
+                empty_count += 1
+
+        if player_discs == 3 and empty_count == 1:
+            value += 10
+        elif player_discs == 2 and empty_count == 2:
+            value += 4
+        elif opponent_discs == 3 and empty_count == 1:
+            value -= 10
 
         return value
