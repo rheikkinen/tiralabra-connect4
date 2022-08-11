@@ -64,18 +64,6 @@ class GameBoard:
                 return False
         return True
 
-    def end_state(self):
-        """Tarkastaa, onko peli lopputilassa viimeksi pelanneen
-        pelaajan siirron jälkeen, eli onko pelaaja voittanut tai
-        peliruudukko täynnä (tasapeli)."""
-        row, column, player = self.get_last_move()
-
-        if self.check_for_win(row, column, player):
-            return player # Palauttaa voittaneen pelaajan, 1 tai 2
-        if self.board_is_full():
-            return 0 # Tasapeli, palauttaa 0
-        return None
-
     def check_for_win(self, row, column, player):
         return self.check_horizontal_discs(row, column, player) \
             or self.check_vertical_discs(row, column, player) \

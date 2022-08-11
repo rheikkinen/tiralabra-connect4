@@ -64,7 +64,7 @@ class ConnectFour:
 
             else:
                 print(f"Pelaaja {player} (tekoäly) valitsee sarakkeen.\n")
-                selected_column, runtime = self.ai.best_column(self.board)
+                selected_column, _, runtime = self.ai.best_column(self.board)
                 self.ai_times.append(runtime)
 
             if self.board.column_is_available(selected_column):

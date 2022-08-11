@@ -14,6 +14,28 @@ class AI:
     def player(self):
         return self.ai_player
 
+    def end_state(self, board: GameBoard):
+        """Tarkastaa, onko peli päätöstilassa, eli onko pelaaja voittanut tai
+        peliruudukko täynnä (tasapeli).
+
+        :param board: Peliruudukko GameBoard-luokan oliona
+
+        :return: Jos on päätöstila, palauttaa True ja tilaa vastaavan pistearvon.
+        Muuten palauttaa (False, None).
+        """
+        row, column, player = board.get_last_move()
+        if board.check_for_win(row, column ,player):
+            if player == self.ai_player:
+                value = -10_000_000 # MIN voitti
+            else:
+                value = 10_000_000 # MAX voitti
+            return True, value
+
+        if board.board_is_full():
+            return True, 0 # Tasapeli
+
+        return False, None
+
     def best_column(self, board: GameBoard, depth=6):
         if self.level == 0:
             # Palauttaa satunnaisen sarakkeen väliltä [0, sarakkeiden_lkm - 1]
@@ -38,25 +60,30 @@ class AI:
             print(f"Minimax-algoritmin suoritusaika: {runtime} sekuntia")
 
 
-        return column, runtime
+        return column, value, runtime
 
     def minimax(self, board: GameBoard, alpha, beta, depth: int, maximizing: bool):
+        """Minimax-algoritmi alfa-beta -karsinnalla. Käy rekursiivisesti pelipuuta läpi
+        päätössolmuun tai annettuun syvyyteen asti.
+
+        :param board: Peliruudukko GameBoard-luokan oliona
+        :param alpha: Alfan arvo
+        :param beta: Betan arvo
+        :param depth: Jäljellä oleva laskentasyvyys
+        :param maximizing: True, jos maksimoiva pelaaja, muuten False
+
+        :return: Palauttaa pelitilanteen pisteytyksen ja parhaaksi arvioidun sarakkeen
+        """
         self.nodes_visited += 1
 
-        end_state = board.end_state()
+        end_state, end_state_value = self.end_state(board)
 
-        if end_state:
-            if end_state == self.ai_player: # Tekoälyn (min) voitto
-                return -10_000_000, None
-            if end_state == self.opponent: # Toisen pelaajan (max) voitto
-                return 10_000_000, None
-            return 0, None # Tasapeli
+        if end_state: # Päätössolmu (voitto tai tasapeli)
+            return end_state_value, None
 
-        if depth == 0:
-            # Määritetään pelitilanteen arvo
+        if depth == 0: # Laskentasyvyys saavutettu
             value = self.evaluate_board(board)
             return value, None
-
 
         if maximizing: # Maksimoiva pelaaja
             max_value = -999_999_999
@@ -107,7 +134,14 @@ class AI:
             return min_value, best_column
 
     def evaluate_board(self, board: GameBoard):
-        """Pisteyttää peliruudukon tilanteen vuorossa olevan pelaajan kannalta."""
+        """Pisteytysfunktio, joka käy läpi koko peliruudukon ja pisteyttää pelitilanteen vuorossa
+        olevan pelaajan kannalta.
+
+        :param board: Peliruudukko GameBoard-luokan oliona
+
+        :rtype: int
+        :return: Palauttaa pelitilanteelle lasketun pisteytyksen
+        """
 
         # Viimeisimmän siirron tehnyt pelaaja
         _, _, player = board.get_last_move()
@@ -152,17 +186,23 @@ class AI:
 
         return value
 
-    def get_block_value(self, evaluation_block: list, player: int):
-        """Pisteyttää neljän ruudun kokoisen lohkon parametrina annetun pelaajan kannalta.
-        Lohko sisältää neljä vierekkäistä ruutua vaaka-, pysty- tai vinosuunnassa."""
+    def get_block_value(self, block: list, player: int):
+        """Pisteyttää neljän ruudun mittaisen lohkon vuorossa olevan pelaajan kannalta.
+        Lohko sisältää neljän vierekkäisen ruudun arvot vaaka-, pysty- tai vinosuunnassa.
 
+        :param block: Pisteytettävä lohko
+        :param player: Vuorossa oleva pelaaja, 1 tai 2
+
+        :rtype: int
+        :return: Palauttaa lohkon pisteytyksen
+        """
         opponent = (player % 2) + 1
 
         player_discs = 0
         opponent_discs = 0
         empty_count = 0
 
-        for disc in evaluation_block:
+        for disc in block:
             if disc == player:
                 player_discs +=1
             elif disc == opponent:
