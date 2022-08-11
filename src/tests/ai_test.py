@@ -18,8 +18,6 @@ class TestConnectFour(unittest.TestCase):
             self.board.update_position(row=1, column=col, value=2)
             self.board.update_position(row=0, column=col, value=1)
 
-        self.ai.store_last_move(row=1, column=2)
-
             # PELILAUDAN TILANNE
             # 2 = tekoälyn kiekko
             # 0 = tyhjä ruutu
@@ -49,8 +47,6 @@ class TestConnectFour(unittest.TestCase):
         self.board.update_position(row=1, column=3, value=1)
         self.board.update_position(row=2, column=3, value=1)
         self.board.update_position(row=3, column=3, value=2)
-
-        self.ai.store_last_move(row=1, column=2)
 
             # PELILAUDAN TILANNE
             # 2 = tekoälyn kiekko

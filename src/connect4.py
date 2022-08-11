@@ -15,7 +15,7 @@ class ConnectFour:
 
     def print_board(self): # UI
         print(self.column_numbers)
-        print(np.flip(self.board.get_board(), 0))
+        self.board.print_board()
 
     def drop_disc(self, row, column, player):
         self.board.update_position(row, column, value=player)
@@ -71,8 +71,6 @@ class ConnectFour:
                 row = self.board.get_next_available_row(selected_column)
 
                 self.drop_disc(row, selected_column, player)
-
-                self.ai.store_last_move(row, selected_column)
 
                 if self.player_won(row, selected_column, player):
                     print(f"\nPelaaja {player} voitti pelin!\n")

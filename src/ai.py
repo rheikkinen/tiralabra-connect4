@@ -10,15 +10,9 @@ class AI:
         self.ai_player = player
         self.opponent = (player % 2) + 1
         self.nodes_visited = 0
-        self.last_row = None
-        self.last_col = None
 
     def player(self):
         return self.ai_player
-
-    def store_last_move(self, row, column):
-        self.last_row = row
-        self.last_col = column
 
     def best_column(self, board: GameBoard, depth=6):
         if self.level == 0:
@@ -31,12 +25,10 @@ class AI:
 
             start_time = time()
 
-            row, col = self.last_row, self.last_col
-
             # Alfan ja betan alkuarvot
             alpha, beta = -inf, inf
 
-            value, column = self.minimax(board, row, col, alpha, beta, depth, maximizing=False)
+            value, column = self.minimax(board, alpha, beta, depth, maximizing=False)
 
             end_time = time()
             runtime = end_time - start_time
@@ -48,13 +40,10 @@ class AI:
 
         return column, runtime
 
-    def minimax(self, board:GameBoard, last_row, last_col, alpha, beta, depth:int, maximizing:bool):
+    def minimax(self, board: GameBoard, alpha, beta, depth: int, maximizing: bool):
         self.nodes_visited += 1
 
-        # Edellisen siirron tehnyt pelaaja
-        last_player = self.ai_player if maximizing else self.opponent
-
-        end_state = board.end_state(last_row, last_col, last_player)
+        end_state = board.end_state()
 
         if end_state:
             if end_state == self.ai_player: # Tekoälyn (min) voitto
@@ -65,7 +54,7 @@ class AI:
 
         if depth == 0:
             # Määritetään pelitilanteen arvo
-            value = self.evaluate_board(board, last_player)
+            value = self.evaluate_board(board)
             return value, None
 
 
@@ -77,7 +66,7 @@ class AI:
             for column in valid_columns:
                 row = board.get_next_available_row(column)
                 board.update_position(row, column, value=self.opponent)
-                value = self.minimax(board, row, column, alpha, beta, depth-1, maximizing=False)[0]
+                value = self.minimax(board, alpha, beta, depth-1, maximizing=False)[0]
 
                 # Kumotaan siirto
                 board.update_position(row, column, value=0)
@@ -101,7 +90,7 @@ class AI:
             for column in valid_columns:
                 row = board.get_next_available_row(column)
                 board.update_position(row, column, value=self.ai_player)
-                value = self.minimax(board, row, column, alpha, beta, depth-1, maximizing=True)[0]
+                value = self.minimax(board, alpha, beta, depth-1, maximizing=True)[0]
 
                 # Kumotaan siirto
                 board.update_position(row, column, value=0)
@@ -117,8 +106,11 @@ class AI:
 
             return min_value, best_column
 
-    def evaluate_board(self, board: GameBoard, player: int):
+    def evaluate_board(self, board: GameBoard):
         """Pisteyttää peliruudukon tilanteen vuorossa olevan pelaajan kannalta."""
+
+        # Viimeisimmän siirron tehnyt pelaaja
+        _, _, player = board.get_last_move()
 
         value = 0
 

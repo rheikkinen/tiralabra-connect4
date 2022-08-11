@@ -9,6 +9,7 @@ class GameBoard:
         self.columns = columns
         self._board = self.init_board(self.rows, self.columns)
         self._winning_row = winning_row
+        self.last_move = None, None, None
 
     def init_board(self, rows: int, columns: int):
         return np.zeros((rows, columns), dtype=int)
@@ -22,8 +23,19 @@ class GameBoard:
     def get_board(self):
         return self._board
 
+    def store_last_move(self, row: int, column: int, player: int):
+        """Tallentaa oliolle viimeisimmän siirron koordinaatit
+        ja siirron tehneen pelaajan."""
+        self.last_move = row, column, player
+
+    def get_last_move(self):
+        """Palauttaa viimeisimmän siirron sijainnin pelilaudalla
+        (rivi ja sarake) ja siirron tehneen pelaajan."""
+        return self.last_move
+
     def update_position(self, row: int, column: int, value: int):
         self._board[row][column] = value
+        self.store_last_move(row, column, value)
 
     def get_position(self, row: int, column: int):
         return self._board[row][column]
@@ -52,10 +64,11 @@ class GameBoard:
                 return False
         return True
 
-    def end_state(self, row, column, player: int):
+    def end_state(self):
         """Tarkastaa, onko peli lopputilassa viimeksi pelanneen
         pelaajan siirron jälkeen, eli onko pelaaja voittanut tai
         peliruudukko täynnä (tasapeli)."""
+        row, column, player = self.get_last_move()
 
         if self.check_for_win(row, column, player):
             return player # Palauttaa voittaneen pelaajan, 1 tai 2
