@@ -10,7 +10,7 @@ class GameBoard:
         self._board = self.init_board(self.rows, self.columns)
         self._winning_row = winning_row
 
-    def init_board(self, rows, columns):
+    def init_board(self, rows: int, columns: int):
         return np.zeros((rows, columns), dtype=int)
 
     def reset_board(self):
@@ -22,39 +22,45 @@ class GameBoard:
     def get_board(self):
         return self._board
 
-    def update_position(self, row, column, value):
+    def update_position(self, row: int, column: int, value: int):
         self._board[row][column] = value
 
-    def get_position(self, row, column):
+    def get_position(self, row: int, column: int):
         return self._board[row][column]
 
-    def column_is_available(self, column):
+    def column_is_available(self, column: int):
         return self.get_position(ROW_COUNT-1, column) == 0
 
     def get_available_columns(self):
+        """Palauttaa listana peliruudukon vapaana olevat sarakkeet
+        järjestyksessä keskimmäisistä reunimmaisiin."""
         valid_columns = []
         for column in ORDER:
             if self.column_is_available(column):
                 valid_columns.append(column)
         return valid_columns
 
-    def get_next_available_row(self, column):
+    def get_next_available_row(self, column: int):
         for row in range(ROW_COUNT):
             if self.get_position(row, column) == 0:
                 return row
         return None
 
-    def all_columns_are_filled(self):
+    def board_is_full(self):
         for column in range(COL_COUNT):
             if self.column_is_available(column):
                 return False
         return True
 
-    def end_state(self, row, column, player):
+    def end_state(self, row, column, player: int):
+        """Tarkastaa, onko peli lopputilassa viimeksi pelanneen
+        pelaajan siirron jälkeen, eli onko pelaaja voittanut tai
+        peliruudukko täynnä (tasapeli)."""
+
         if self.check_for_win(row, column, player):
-            return player # 1 tai 2
-        if self.all_columns_are_filled():
-            return 0 # tasapeli
+            return player # Palauttaa voittaneen pelaajan, 1 tai 2
+        if self.board_is_full():
+            return 0 # Tasapeli, palauttaa 0
         return None
 
     def check_for_win(self, row, column, player):
@@ -64,14 +70,14 @@ class GameBoard:
             or self.check_negative_diagonal(row, column, player) \
             or False
 
-    def check_horizontal_discs(self, last_row, last_col, player_disc):
-        """Tarkastaa muodostaako pudotettu kiekko vaakasuunnassa voittavan
+    def check_horizontal_discs(self, last_row: int, last_col: int, player_disc: int):
+        """Tarkastaa, muodostaako pudotettu kiekko vaakasuunnassa voittavan
         kiekkojonon (oletus 4 kiekkoa). Palauttaa True, jos voittava jono löytyy.
         Muuten palauttaa None."""
 
         discs_in_a_row = 1
 
-        # Tarkastetaan pudotetun kiekon oikea puoli
+        # Tarkastetaan pudotetun kiekon oikealla puolella olevat ruudut
         for col in range(last_col + 1, last_col + 4):
             if col > 6 or self.get_position(last_row, col) != player_disc:
                 break
@@ -80,7 +86,7 @@ class GameBoard:
             if discs_in_a_row == self._winning_row:
                 return True
 
-        # Tarkastetaan pudotetun kiekon vasen puoli
+        # Tarkastetaan pudotetun kiekon vasemmalla puolella olevat ruudut
         for col in range(last_col - 1, last_col - 4, -1):
             if col < 0 or self.get_position(last_row, col) != player_disc:
                 break
@@ -91,10 +97,10 @@ class GameBoard:
 
         return None
 
-    def check_vertical_discs(self, last_row, last_col, player_disc):
-        """Tarkastaa, muodostaako pudotettu kiekko pystysuunnassa
-        voittavan neljän kiekon jonon. Palauttaa True, jos neljän kiekon jono löytyy.
-        Muuten paluttaa None."""
+    def check_vertical_discs(self, last_row: int, last_col: int, player_disc: int):
+        """Tarkastaa, muodostaako pudotettu kiekko pystysuunnassa voittavan
+        kiekkojonon (oletus 4 kiekkoa). Palauttaa True, jos voittava jono löytyy.
+        Muuten palauttaa None."""
 
         discs_in_a_row = 1
 
@@ -109,14 +115,14 @@ class GameBoard:
 
         return None
 
-    def check_positive_diagonal(self, last_row, last_col, player_disc):
+    def check_positive_diagonal(self, last_row: int, last_col: int, player_disc: int):
         """Tarkastaa, muodostaako pudotettu kiekko vinottain (nouseva suunta)
-        voittavan neljän kiekon jonon. Palauttaa True jos neljän kiekon jono löytyy.
-        Muuten paluttaa None."""
+        voittavan kiekkojonon (oletus 4 kiekkoa). Palauttaa True, jos voittava
+        jono löytyy. Muuten paluttaa None."""
 
         discs_in_a_row = 1
 
-        # Oikea yläviisto
+        # Tarkastetaan ruudut pudotetusta kiekosta oikeaan yläviistoon
         for row, col in zip(range(last_row + 1, last_row + 4),\
                             range(last_col + 1, last_col + 4)):
             if row > 5 or col > 6 or self.get_position(row, col) != player_disc:
@@ -126,7 +132,7 @@ class GameBoard:
             if discs_in_a_row == self._winning_row:
                 return True
 
-        # Vasen alaviisto
+        # Tarkastetaan ruudut pudotetusta kiekosta vasempaan alaviistoon
         for row, col in zip(range(last_row - 1, last_row - 4, -1),\
                             range(last_col - 1, last_col - 4, -1)):
             if row < 0 or col < 0 or self.get_position(row, col) != player_disc:
@@ -138,14 +144,14 @@ class GameBoard:
 
         return None
 
-    def check_negative_diagonal(self, last_row, last_col, player_disc):
+    def check_negative_diagonal(self, last_row: int, last_col: int, player_disc: int):
         """Tarkastaa, muodostaako pudotettu kiekko vinottain (laskeva suunta)
-        voittavan neljän kiekon jonon. Palauttaa True jos neljän kiekon jono löytyy.
-        Muuten paluttaa None."""
+        voittavan kiekkojonon (oletus 4 kiekkoa). Palauttaa True, jos voittava
+        jono löytyy. Muuten palauttaa None."""
 
         discs_in_a_row = 1
 
-        # Vasen yläviisto
+        # Tarkastetaan ruudut pudotetusta kiekosta vasempaan yläviistoon
         for row, col in zip(range(last_row + 1, last_row + 4),\
                             range(last_col - 1, last_col - 4, -1)):
             if row > 5 or col < 0 or self.get_position(row, col) != player_disc:
@@ -155,7 +161,7 @@ class GameBoard:
             if discs_in_a_row == self._winning_row:
                 return True
 
-        # Oikea alaviisto
+        # Tarkastetaan ruudut pudotetusta kiekosta oikeaan alaviistoon
         for row, col in zip(range(last_row - 1, last_row - 4, -1),\
                             range(last_col + 1, last_col + 4)):
             if row < 0 or col > 6 or self.get_position(row, col) != player_disc:

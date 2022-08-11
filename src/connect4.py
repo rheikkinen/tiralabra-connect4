@@ -11,6 +11,8 @@ class ConnectFour:
         self.game_over = False
         self.column_numbers = np.array(COLUMN_NUMBERS, dtype=int, ndmin=2)
 
+        self.ai_times = []
+
     def print_board(self): # UI
         print(self.column_numbers)
         print(np.flip(self.board.get_board(), 0))
@@ -24,7 +26,7 @@ class ConnectFour:
 
     def game_is_tied(self):
         """Palauttaa True, jos kaikki sarakkeet ovat täynnä, muuten palauttaa False."""
-        return self.board.all_columns_are_filled()
+        return self.board.board_is_full()
 
     def player_won(self, last_row, last_col, player):
         """Palauttaa True, jos viimeksi pudotettu kiekko muodostaa lähellä olevien
@@ -43,7 +45,7 @@ class ConnectFour:
         return False
 
     def start_game(self):
-        player = 1
+        player = 1 # Aloittava pelaaja
 
         print(f"Tekoäly on pelaaja nro {self.ai.player()}")
 
@@ -62,11 +64,12 @@ class ConnectFour:
 
             else:
                 print(f"Pelaaja {player} (tekoäly) valitsee sarakkeen.\n")
-                selected_column = self.ai.best_column(self.board)
+                selected_column, runtime = self.ai.best_column(self.board)
+                self.ai_times.append(runtime)
 
             if self.board.column_is_available(selected_column):
-                # Haetaan positions-muuttujan avulla sarakkeen seuraava vapaa rivi
                 row = self.board.get_next_available_row(selected_column)
+
                 self.drop_disc(row, selected_column, player)
 
                 self.ai.store_last_move(row, selected_column)
@@ -78,10 +81,14 @@ class ConnectFour:
                     self.game_over = True
 
                 elif self.game_is_tied():
-                    print("Tasapeli!")
+                    print("\nTasapeli!\n")
+                    self.print_board()
 
                     self.game_over = True
 
                 player = (player % 2) + 1
             else:
                 print(f"\nSarake {selected_column} on täynnä! Valitse toinen sarake.\n")
+
+        average_time = sum(self.ai_times) / len(self.ai_times)
+        print(f"\nTekoälyn suoritusaika keskimäärin: {average_time} sekuntia")
