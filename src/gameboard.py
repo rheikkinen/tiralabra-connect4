@@ -64,11 +64,19 @@ class GameBoard:
                 return False
         return True
 
-    def check_for_win(self, row, column, player):
-        return self.check_horizontal_discs(row, column, player) \
-            or self.check_vertical_discs(row, column, player) \
-            or self.check_positive_diagonal(row, column, player) \
-            or self.check_negative_diagonal(row, column, player) \
+    def check_for_win(self):
+        """Tarkastaa, onko viimeksi pudotettu kiekko muodostanut voittavan kiekkojonon.
+
+        :rtype: bool
+        :return: Palauttaa True, jos viimeksi pelannut pelaaja on tehnyt voittavan siirron,
+        muuten False.
+        """
+        last_row, last_column, player = self.get_last_move()
+
+        return self.check_horizontal_discs(last_row, last_column, player) \
+            or self.check_vertical_discs(last_row, last_column, player) \
+            or self.check_positive_diagonal(last_row, last_column, player) \
+            or self.check_negative_diagonal(last_row, last_column, player) \
             or False
 
     def check_horizontal_discs(self, last_row: int, last_col: int, player_disc: int):

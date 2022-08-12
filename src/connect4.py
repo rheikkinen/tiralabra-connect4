@@ -28,10 +28,10 @@ class ConnectFour:
         """Palauttaa True, jos kaikki sarakkeet ovat täynnä, muuten palauttaa False."""
         return self.board.board_is_full()
 
-    def player_won(self, last_row, last_col, player):
+    def player_won(self):
         """Palauttaa True, jos viimeksi pudotettu kiekko muodostaa lähellä olevien
         kiekkojen kanssa voittavan kiekkojonon. Muuten palauttaa False."""
-        return self.board.check_for_win(last_row, last_col, player)
+        return self.board.check_for_win()
 
     def valid_input(self, user_input):
         """Validoi käyttäjän antaman syötteen."""
@@ -72,7 +72,7 @@ class ConnectFour:
 
                 self.drop_disc(row, selected_column, player)
 
-                if self.player_won(row, selected_column, player):
+                if self.player_won():
                     print(f"\nPelaaja {player} voitti pelin!\n")
                     self.print_board()
 

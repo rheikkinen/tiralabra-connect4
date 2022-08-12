@@ -15,16 +15,17 @@ class AI:
         return self.ai_player
 
     def end_state(self, board: GameBoard):
-        """Tarkastaa, onko peli päätöstilassa, eli onko pelaaja voittanut tai
-        peliruudukko täynnä (tasapeli).
+        """Tarkastaa, onko peli päätöstilassa, eli onko viimeisimmän siirron
+        tehnyt pelaaja voittanut tai onko peliruudukko täynnä (tasapeli).
 
         :param board: Peliruudukko GameBoard-luokan oliona
 
         :return: Jos on päätöstila, palauttaa True ja tilaa vastaavan pistearvon.
         Muuten palauttaa (False, None).
         """
-        row, column, player = board.get_last_move()
-        if board.check_for_win(row, column ,player):
+        if board.check_for_win():
+            _, _, player = board.get_last_move()
+
             if player == self.ai_player:
                 value = -10_000_000 # MIN voitti
             else:
