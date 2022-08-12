@@ -3,12 +3,17 @@ import unittest
 from gameboard import GameBoard
 from ai import AI
 
-class TestConnectFour(unittest.TestCase):
+class TestAI(unittest.TestCase):
+    """Yksikkötestit, jotka testaavat AI-luokan metodien eli pelitekoälyn toiminnallisuutta."""
     def setUp(self):
+        """Alustusmetodi, jossa luodaan oliot pelilaudalle ja pelitekoälylle.
+        Suoritetaan ennen jokaista testitapausta."""
         self.board = GameBoard()
         self.ai = AI()
 
     def test_ai_chooses_winning_move_horizontally(self):
+        """Tarkastaa, että tekoälyn best_column metodi palauttaa voittavan sarakkeen, jos
+        vaakasuunnassa on mahdollisuus tehdä voittava siirto."""
         # Alustetaan pelilauta
         for col in range(3):
             self.board.update_position(row=0, column=col, value=2)
@@ -35,6 +40,8 @@ class TestConnectFour(unittest.TestCase):
         self.assertEqual(best_column, 3, "Sarakkeen pitäisi olla 3!")
 
     def test_ai_chooses_winning_move_in_positive_diagonal(self):
+        """Tarkastaa, että tekoälyn best_column metodi palauttaa voittavan sarakkeen, jos
+        vinottain nousevassa suunnassa on mahdollisuus tehdä voittava siirto."""
         # Alustetaan pelilauta
         self.board.update_position(row=0, column=0, value=2)
         self.board.update_position(row=0, column=1, value=1)
@@ -65,6 +72,8 @@ class TestConnectFour(unittest.TestCase):
         self.assertEqual(best_column, 2, "Sarakkeen pitäisi olla 2!")
 
     def test_ai_chooses_winning_move_in_negative_diagonal(self):
+        """Tarkastaa, että tekoälyn best_column metodi palauttaa voittavan sarakkeen, jos
+        vinottain laskevassa suunnassa on mahdollisuus tehdä voittava siirto."""
         # Alustetaan pelilauta
         self.board.update_position(row=0, column=0, value=2)
         self.board.update_position(row=0, column=1, value=1)
@@ -94,6 +103,8 @@ class TestConnectFour(unittest.TestCase):
         self.assertEqual(best_column, 0)
 
     def test_ai_chooses_winning_move_vertically(self):
+        """Tarkastaa, että tekoälyn best_column metodi palauttaa voittavan sarakkeen, jos
+        pystysuunnassa on mahdollisuus tehdä voittava siirto."""
         # Alustetaan pelilauta
         self.board.update_position(row=0, column=0, value=1)
         self.board.update_position(row=0, column=1, value=2)
@@ -122,6 +133,8 @@ class TestConnectFour(unittest.TestCase):
         self.assertEqual(best_column, 1)
 
     def test_ai_evaluates_draw_game_state_correctly(self):
+        """Tarkastaa, että tekoälyn best_column metodi palauttaa viimeisen vapaan sarakkeen
+        pisteytyksellä 0, kun jäljellä on vain yksi mahdollinen siirto, joka johtaa tasapeliin. """
         # Alustetaan pelilauta
         for i in range(0, 6):
             if i % 2 == 0:
