@@ -1,4 +1,3 @@
-from math import inf
 from random import randint
 from time import time
 from constants import ROW_COUNT, COL_COUNT
@@ -49,7 +48,7 @@ class AI:
             start_time = time()
 
             # Alfan ja betan alkuarvot
-            alpha, beta = -inf, inf
+            alpha, beta = -999_999_999, 999_999_999
 
             value, column = self.minimax(board, alpha, beta, depth, maximizing=False)
 
@@ -58,7 +57,7 @@ class AI:
 
             print(f"Minimax valitsi sarakkeen {column + 1} pisteytyksellä {value}")
             print(f"Pelipuun solmuja käsitelty: {self.nodes_visited} kpl")
-            print(f"Minimax-algoritmin suoritusaika: {runtime} sekuntia")
+            print(f"Minimax-algoritmin suoritusaika: {runtime} sekuntia\n")
 
 
         return column, value, runtime
