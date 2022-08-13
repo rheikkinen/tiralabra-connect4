@@ -11,10 +11,10 @@ class ConnectFour:
         self.game_over = False
         self.column_numbers = np.array(COLUMN_NUMBERS, dtype=int, ndmin=2)
 
-        self.ai_times = []
+        self.ai_times = [] # Listaa tekoälyn suoritusajat
 
     def print_board(self): # UI
-        print(self.column_numbers)
+        print(self.column_numbers, "\n")
         self.board.print_board()
 
     def drop_disc(self, row, column, player):
@@ -24,7 +24,7 @@ class ConnectFour:
         """Palauttaa True, jos sarake on vapaa. Muuten palauttaa False."""
         return self.board.column_is_available(column)
 
-    def game_is_tied(self):
+    def game_ended_in_tie(self):
         """Palauttaa True, jos kaikki sarakkeet ovat täynnä, muuten palauttaa False."""
         return self.board.board_is_full()
 
@@ -47,20 +47,24 @@ class ConnectFour:
     def start_game(self):
         player = 1 # Aloittava pelaaja
 
-        print(f"Tekoäly on pelaaja nro {self.ai.player()}")
+        print(f"Peli alkoi. Tekoäly on pelaaja nro {self.ai.player()}\n")
 
         while not self.game_over:
             self.print_board()
-            print("")
+
 
             if player != self.ai.player():
-                message = f"Pelaaja {player}, valitse sarake, johon haluat pudottaa kiekon: "
-                selected_column = input(message)
+                message = f"\nPelaaja {player}, syötä haluamasi sarake väliltä 1-7 tai lopeta peli syöttämällä q: "
+                user_input = input(message)
                 print("")
-                if not self.valid_input(selected_column):
+                if user_input == "q" or user_input == "Q":
+                    print("Peli lopetetaan.")
+                    self.game_over = True
+                elif not self.valid_input(user_input):
                     print("Antamasi syöte on virheellinen!\n")
                     continue
-                selected_column = int(selected_column) - 1
+                else:
+                    selected_column = int(user_input) - 1
 
             else:
                 print(f"Pelaaja {player} (tekoäly) valitsee sarakkeen.\n")
@@ -78,7 +82,7 @@ class ConnectFour:
 
                     self.game_over = True
 
-                elif self.game_is_tied():
+                elif self.game_ended_in_tie():
                     print("\nTasapeli!\n")
                     self.print_board()
 
