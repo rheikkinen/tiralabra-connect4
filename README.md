@@ -15,6 +15,8 @@ Harjoitustyö, jonka aiheena on Connect Four -pelille toteutettava tekoäly, jot
 - [Viikko 1](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/viikkoraportit/viikkoraportti_1.md)
 - [Viikko 2](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/viikkoraportit/viikkoraportti_2.md)
 - [Viikko 3](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/viikkoraportit/viikkoraportti_3.md)
+- [Viikko 4](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/viikkoraportit/viikkoraportti_4.md)
+
 
 ## Käyttöohje
 Sovellus toimii ainoastaan paikallsesti käyttäjän omalla tietokoneella, ja sitä käytetään komentoriviltä.
