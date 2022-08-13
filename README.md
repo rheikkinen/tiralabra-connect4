@@ -39,3 +39,9 @@ poetry run python3 src/play.py
 ```
 
 Pelin pelilauta on 2-ulotteinen taulukko, jossa 0 on tyhjä ruutu, 1 on käyttäjän kiekko, ja 2 on pelitekoälyn kiekko. Tällä hetkellä käyttäjä on aina aloittava pelaaja.
+
+## Yksikkötestit
+Yksikkötestit voi suorittaa projektin juurihakemistossa komennolla
+```
+poetry run pytest
+```
