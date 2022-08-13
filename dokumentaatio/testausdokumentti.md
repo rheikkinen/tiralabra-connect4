@@ -1,11 +1,11 @@
 # Testausdokumentti
 ## Sisältö
-#### [Yksikkötestaus](https://github.com/rheikkinen/tiralabra-connect4/edit/main/dokumentaatio/testausdokumentti.md#yksikk%C3%B6testaus)
-- [Testikattavuus](https://github.com/rheikkinen/tiralabra-connect4/edit/main/dokumentaatio/testausdokumentti.md#testikattavuus)
-  - [Testikattavuus visualisoituna](https://github.com/rheikkinen/tiralabra-connect4/edit/main/dokumentaatio/testausdokumentti.md#projektin-testikattavuuden-visualisointi-k%C3%A4ytt%C3%A4en-plotlya-hy%C3%B6dynt%C3%A4v%C3%A4%C3%A4-coverage-plot--kirjastoa)
-  - [Testikattavuuden kehitys](https://github.com/rheikkinen/tiralabra-connect4/edit/main/dokumentaatio/testausdokumentti.md#testikattavuuden-kehitys-kaaviona)
-- [Peliruudukon testaus](https://github.com/rheikkinen/tiralabra-connect4/edit/main/dokumentaatio/testausdokumentti.md#peliruudukon-testaus)
-- [Pelitekoälyn testaus](https://github.com/rheikkinen/tiralabra-connect4/edit/main/dokumentaatio/testausdokumentti.md#peliteko%C3%A4lyn-testaus)
+#### [Yksikkötestaus](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/testausdokumentti.md#yksikk%C3%B6testaus)
+- [Testikattavuus](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/testausdokumentti.md#testikattavuus)
+  - [Testikattavuus visualisoituna](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/testausdokumentti.md#projektin-testikattavuuden-visualisointi-k%C3%A4ytt%C3%A4en-plotlya-hy%C3%B6dynt%C3%A4v%C3%A4%C3%A4-coverage-plot--kirjastoa)
+  - [Testikattavuuden kehitys](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/testausdokumentti.md#testikattavuuden-kehitys-kaaviona)
+- [Peliruudukon testaus](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/testausdokumentti.md#peliruudukon-testaus)
+- [Pelitekoälyn testaus](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/testausdokumentti.md#peliteko%C3%A4lyn-testaus)
 
 ## Yksikkötestaus
 Yksikkötestit suoritetaan käyttäen pytestiä. Testit sijaitsevat hakemistossa [src/tests/](https://github.com/rheikkinen/tiralabra-connect4/tree/main/src/tests). Testien suorittaminen onnistuu projektin juurihakemistossa komennolla
