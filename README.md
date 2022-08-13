@@ -15,3 +15,14 @@ Harjoitustyö, jonka aiheena on Connect Four -pelille toteutettava tekoäly, jot
 - [Viikko 1](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/viikkoraportit/viikkoraportti_1.md)
 - [Viikko 2](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/viikkoraportit/viikkoraportti_2.md)
 - [Viikko 3](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/viikkoraportit/viikkoraportti_3.md)
+
+## Käyttöohje
+1. Hae projekti koneellesi
+2. Asenna projektin käyttämät riippuvuudet suorittamalla komento
+```
+poetry install
+```
+3. Käynnistä sovellus suorittamalla komento
+```
+poetry run python3 src/play.py
+```
