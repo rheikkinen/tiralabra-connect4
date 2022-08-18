@@ -13,12 +13,15 @@ class AI:
     def player(self):
         return self.ai_player
 
-    def end_state(self, board: GameBoard):
+    def end_state(self, board: GameBoard, depth: int):
         """Tarkastaa, onko peli päätöstilassa, eli onko viimeisimmän siirron
         tehnyt pelaaja voittanut tai onko peliruudukko täynnä (tasapeli).
 
         :param board: Peliruudukko GameBoard-luokan oliona
+        :param depth: Jäljellä oleva laskentasyvyys, käytetään kertoimena
+        voiton pisteytykselle (voiton arvo on suurempi, jos se saadaan aiemmalla laskentatasolla)
 
+        :rtype: tuple
         :return: Jos on päätöstila, palauttaa True ja tilaa vastaavan pistearvon.
         Muuten palauttaa (False, None).
         """
@@ -26,9 +29,11 @@ class AI:
             _, _, player = board.get_last_move()
 
             if player == self.ai_player:
-                value = -10_000_000 # MIN voitti
+                value = -10_000_000 # Tekoäly eli minimoiva pelaaja voitti
             else:
-                value = 10_000_000 # MAX voitti
+                value = 10_000_000 # Vastustaja eli maksimoiva pelaaja voitti
+            if depth:
+                value *= depth
             return True, value
 
         if board.board_is_full():
@@ -64,7 +69,7 @@ class AI:
 
     def minimax(self, board: GameBoard, alpha, beta, depth: int, maximizing: bool):
         """Minimax-algoritmi alfa-beta -karsinnalla. Käy rekursiivisesti pelipuuta läpi
-        päätössolmuun tai annettuun syvyyteen asti.
+        päätössolmuun tai annettuun syvyyteen asti. Tekoäly on algoritmissa minimoiva pelaaja.
 
         :param board: Peliruudukko GameBoard-luokan oliona
         :param alpha: Alfan arvo
@@ -72,11 +77,12 @@ class AI:
         :param depth: Jäljellä oleva laskentasyvyys
         :param maximizing: True, jos maksimoiva pelaaja, muuten False
 
+        :rtype: tuple
         :return: Palauttaa pelitilanteen pisteytyksen ja parhaaksi arvioidun sarakkeen
         """
         self.nodes_visited += 1
 
-        end_state, end_state_value = self.end_state(board)
+        end_state, end_state_value = self.end_state(board, depth)
 
         if end_state: # Päätössolmu (voitto tai tasapeli)
             return end_state_value, None
@@ -188,7 +194,7 @@ class AI:
 
     def get_block_value(self, block: list, player: int):
         """Pisteyttää neljän ruudun mittaisen lohkon vuorossa olevan pelaajan kannalta.
-        Lohko sisältää neljän vierekkäisen ruudun arvot vaaka-, pysty- tai vinosuunnassa.
+        Lohko on lista, joka sisältää neljän peräkkäisen ruudun arvot vaaka-, pysty- tai vinosuunnassa.
 
         :param block: Pisteytettävä lohko
         :param player: Vuorossa oleva pelaaja, 1 tai 2
