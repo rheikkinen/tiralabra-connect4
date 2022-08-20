@@ -17,31 +17,6 @@ class AI:
     def player(self):
         return self.ai_player
 
-    def end_state(self, board: GameBoard):
-        """Tarkastaa, onko peli päätöstilassa, eli onko viimeisimmän siirron
-        tehnyt pelaaja voittanut tai onko peliruudukko täynnä (tasapeli).
-
-        :param board: Peliruudukko GameBoard-luokan oliona
-
-        :rtype: tuple
-        :return: Jos on päätöstila, palauttaa True ja tilaa vastaavan pistearvon.
-        Muuten palauttaa (False, None).
-        """
-        if board.check_for_win():
-            _, _, player = board.get_last_move()
-
-            if player == self.ai_player:
-                value = MIN_SCORE # Tekoäly eli minimoiva pelaaja voitti
-            else:
-                value = MAX_SCORE # Vastustaja eli maksimoiva pelaaja voitti
-
-            return True, value
-
-        if board.board_is_full():
-            return True, 0 # Tasapeli
-
-        return False, None
-
     def best_column(self, board: GameBoard, depth=7):
         """Valitsee pelitekoälylle seuraavaksi tehtävän siirron
         määritetyn vaikeustason (level) mukaisella menetelmällä.
@@ -73,7 +48,6 @@ class AI:
             print(f"Pelipuun solmuja käsitelty: {self.nodes_visited} kpl")
             print(f"Minimax-algoritmin suoritusaika: {runtime} sekuntia\n")
 
-
         return column, value, runtime
 
     def minimax(self, board: GameBoard, alpha, beta, depth: int, maximizing: bool):
@@ -93,10 +67,8 @@ class AI:
         """
         self.nodes_visited += 1
 
-        end_state, end_state_value = self.end_state(board)
-
-        if end_state: # Päätössolmu (voitto tai tasapeli)
-            return end_state_value, None
+        if board.board_is_full(): # Päätössolmu, tasapeli
+            return 0, None
 
         if depth == 0: # Laskentasyvyys saavutettu
             value = self.evaluate_board(board)
