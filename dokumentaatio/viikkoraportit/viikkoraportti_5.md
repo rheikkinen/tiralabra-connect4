@@ -1,5 +1,5 @@
 # Viikko 5
-Käytetty aika: 21 tuntia
+Käytetty aika: 22 tuntia
 
 ## Mitä olen tehnyt?
 Viikon alkupuolella ehdin tutkia vertaisarvioitavaa
@@ -17,7 +17,7 @@ jälkimmäistä ongelmaa, ja kerroin osoittautuikin tarpeettomaksi, kun sain jä
 yllättäviä haasteita, joten aikaa ei juuri muuhun jäänytkään, esimerkiksi testaamisen parantamiseen. 
 Nyt algoritmi toimii kuitenkin huomattavasti tehokkaammin ja vaikuttaa osaavan valita seuraavat siirrot järkevämmin.
 
-Lisäksi kirjoitin tämän viikkoraportin.
+Päivitin myös testausdokumenttiin testikattavuusraporttia, sillä kattavuus heikkeni merkittävästä tehtyjen muutosten jälkeen. Lisäksi tein uuden releasen, päivitin hieman toteutusraporttia sekä kirjoitin tämän viikkoraportin.
 
 ## Ohjelman edistyminen
 Tällä viikolla ohjelmaan ei ole tehty paljon muutoksia, eikä testausta ole lisätty. Ohjelmakoodia on refaktoroitu jonkin verran.
