@@ -26,16 +26,14 @@ Sovellus toimii ainoastaan paikallisesti käyttäjän omalla tietokoneella, ja s
 Varmista, että koneellesi on asennettu Poetry. Voit tehdä sen komennolla 
 `poetry --version`, jolloin pitäisi tulostua asennettu versio. Jos Poetrya ei ole asennettu, voit asentaa sen esimerkiksi [Ohjelmistotekniikka-kurssin ohjeella](https://ohjelmistotekniikka-hy.github.io/python/viikko2#asennus).
 
-1. Lataa [uusin release](https://github.com/rheikkinen/tiralabra-connect4/releases/tag/viikko4) esim. zip-tiedostona koneellesi ja pura tiedosto haluamaasi hakemistoon.
+1. Lataa [uusin release](https://github.com/rheikkinen/tiralabra-connect4/releases/tag/viikko5) zip-tiedostona koneellesi ja pura tiedosto haluamaasi hakemistoon. Syntyy oletuksena hakemisto nimeltä `tiralabra-connect4-viikko5`. Tämä on projektin juurihakemisto, ja seuraavat komentorivikomennot tulee tehdä tässä hakemistossa.
 
-2. Syntyy oletuksena hakemisto nimeltä `tiralabra-connect4-viikko4`. Tämä on projektin juurihakemisto, ja seuraavat komentorivikomennot tulee tehdä tässä hakemistossa.
-
-3. Asenna projektin käyttämät riippuvuudet suorittamalla komento
+2. Asenna projektin riippuvuudet suorittamalla komento
 ```
 poetry install
 ```
 
-4. Käynnistä sovellus suorittamalla komento
+3. Käynnistä sovellus suorittamalla komento
 ```
 poetry run python3 src/play.py
 ```
