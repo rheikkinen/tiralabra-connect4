@@ -75,7 +75,7 @@ class AI:
             return value, None
 
         if maximizing: # Maksimoiva pelaaja
-            if self.player_wins_next_move(board, player=self.opponent):
+            if self.player_wins_next_move(board, self.opponent):
                return MAX_SCORE, self._winning_move
 
             max_value = MIN_SCORE
@@ -140,7 +140,6 @@ class AI:
                 return True
             board.clear_position(row, column)
         return False
-
 
     def evaluate_board(self, board: GameBoard):
         """Pisteytysfunktio, joka käy läpi koko peliruudukon ja pisteyttää pelitilanteen vuorossa
