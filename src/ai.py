@@ -3,23 +3,25 @@ from time import time
 from constants import ROW_COUNT, COL_COUNT
 from gameboard import GameBoard
 
+MAX_SCORE = 10_000_000
+MIN_SCORE = -10_000_000
+
 class AI:
     def __init__(self, level=1, player=2):
         self.level = level
         self.ai_player = player
         self.opponent = (player % 2) + 1
         self.nodes_visited = 0
+        self._winning_move = None
 
     def player(self):
         return self.ai_player
 
-    def end_state(self, board: GameBoard, depth: int):
+    def end_state(self, board: GameBoard):
         """Tarkastaa, onko peli päätöstilassa, eli onko viimeisimmän siirron
         tehnyt pelaaja voittanut tai onko peliruudukko täynnä (tasapeli).
 
         :param board: Peliruudukko GameBoard-luokan oliona
-        :param depth: Jäljellä oleva laskentasyvyys, käytetään kertoimena
-        voiton pisteytykselle (voiton arvo on suurempi, jos se saadaan aiemmalla laskentatasolla)
 
         :rtype: tuple
         :return: Jos on päätöstila, palauttaa True ja tilaa vastaavan pistearvon.
@@ -29,11 +31,10 @@ class AI:
             _, _, player = board.get_last_move()
 
             if player == self.ai_player:
-                value = -10_000_000 # Tekoäly eli minimoiva pelaaja voitti
+                value = MIN_SCORE # Tekoäly eli minimoiva pelaaja voitti
             else:
-                value = 10_000_000 # Vastustaja eli maksimoiva pelaaja voitti
-            if depth:
-                value *= depth
+                value = MAX_SCORE # Vastustaja eli maksimoiva pelaaja voitti
+
             return True, value
 
         if board.board_is_full():
@@ -41,7 +42,16 @@ class AI:
 
         return False, None
 
-    def best_column(self, board: GameBoard, depth=6):
+    def best_column(self, board: GameBoard, depth=7):
+        """Valitsee pelitekoälylle seuraavaksi tehtävän siirron
+        määritetyn vaikeustason (level) mukaisella menetelmällä.
+
+        :param board: Peliruudukko GameBoard-luokan oliona
+
+        :rtype: tuple
+        :return: Palauttaa valitun sarakkeen indeksin, siirrolle lasketun pisteytyksen
+        ja laskennan suoritusajan sekunteina.
+        """
         if self.level == 0:
             # Palauttaa satunnaisen sarakkeen väliltä [0, sarakkeiden_lkm - 1]
             column = randint(0, COL_COUNT-1)
@@ -49,11 +59,10 @@ class AI:
         if self.level == 1:
             # Asetetaan käsiteltyjen solmujen lukumäärä nollaksi
             self.nodes_visited = 0
-
             start_time = time()
 
             # Alfan ja betan alkuarvot
-            alpha, beta = -999_999_999, 999_999_999
+            alpha, beta = MIN_SCORE, MAX_SCORE
 
             value, column = self.minimax(board, alpha, beta, depth, maximizing=False)
 
@@ -69,7 +78,9 @@ class AI:
 
     def minimax(self, board: GameBoard, alpha, beta, depth: int, maximizing: bool):
         """Minimax-algoritmi alfa-beta -karsinnalla. Käy rekursiivisesti pelipuuta läpi
-        päätössolmuun tai annettuun syvyyteen asti. Tekoäly on algoritmissa minimoiva pelaaja.
+        päätössolmuun tai annettuun syvyyteen asti. Pelitekoäly on algoritmissa minimoiva
+        pelaaja, eli algoritmi palauttaa sitä pienemmän pisteytyksen mitä parempi pelitilanne
+        on tekoälypelaajan kannalta.
 
         :param board: Peliruudukko GameBoard-luokan oliona
         :param alpha: Alfan arvo
@@ -82,7 +93,7 @@ class AI:
         """
         self.nodes_visited += 1
 
-        end_state, end_state_value = self.end_state(board, depth)
+        end_state, end_state_value = self.end_state(board)
 
         if end_state: # Päätössolmu (voitto tai tasapeli)
             return end_state_value, None
@@ -92,7 +103,10 @@ class AI:
             return value, None
 
         if maximizing: # Maksimoiva pelaaja
-            max_value = -999_999_999
+            if self.player_wins_next_move(board, player=self.opponent):
+               return MAX_SCORE, self._winning_move
+
+            max_value = MIN_SCORE
             valid_columns = board.get_available_columns()
             best_column = None
 
@@ -102,7 +116,7 @@ class AI:
                 value = self.minimax(board, alpha, beta, depth-1, maximizing=False)[0]
 
                 # Kumotaan siirto
-                board.update_position(row, column, value=0)
+                board.clear_position(row, column)
 
                 if value > max_value:
                     max_value = value
@@ -115,29 +129,46 @@ class AI:
 
             return max_value, best_column
 
-        else: # Minimoiva pelaaja (tekoäly)
-            min_value = 999_999_999
-            valid_columns = board.get_available_columns()
-            best_column = None
+        # Minimoiva pelaaja (tekoäly)
+        if self.player_wins_next_move(board, self.ai_player):
+            return MIN_SCORE, self._winning_move
+        
+        min_value = MAX_SCORE
+        valid_columns = board.get_available_columns()
+        best_column = None
 
-            for column in valid_columns:
-                row = board.get_next_available_row(column)
-                board.update_position(row, column, value=self.ai_player)
-                value = self.minimax(board, alpha, beta, depth-1, maximizing=True)[0]
+        for column in valid_columns:
+            row = board.get_next_available_row(column)
+            board.update_position(row, column, value=self.ai_player)
+            value = self.minimax(board, alpha, beta, depth-1, maximizing=True)[0]
 
-                # Kumotaan siirto
-                board.update_position(row, column, value=0)
+            # Kumotaan siirto
+            board.clear_position(row, column)
 
-                if value < min_value:
-                    min_value = value
-                    best_column = column
+            if value < min_value:
+                min_value = value
+                best_column = column
 
-                beta = min(beta, min_value)
+            beta = min(beta, min_value)
 
-                if beta <= alpha:
-                    break
+            if beta <= alpha:
+                break
 
-            return min_value, best_column
+        return min_value, best_column
+
+    def player_wins_next_move(self, board: GameBoard, player: int):
+        """Tarkastaa, onko pelaajalla mahdollisuus voittaa seuraavalla siirrolla."""
+        valid_moves = board.get_available_columns()
+        for column in valid_moves:
+            row = board.get_next_available_row(column)
+            board.update_position(row, column, value=player)
+            if board.check_for_win():
+                self._winning_move = column
+                board.clear_position(row, column)
+                return True
+            board.clear_position(row, column)
+        return False
+
 
     def evaluate_board(self, board: GameBoard):
         """Pisteytysfunktio, joka käy läpi koko peliruudukon ja pisteyttää pelitilanteen vuorossa
