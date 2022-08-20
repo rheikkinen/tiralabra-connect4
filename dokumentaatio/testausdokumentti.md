@@ -10,7 +10,7 @@
 ## Yksikkötestaus
 Yksikkötestit suoritetaan käyttäen pytestiä. Testit sijaitsevat hakemistossa [src/tests/](https://github.com/rheikkinen/tiralabra-connect4/tree/main/src/tests). Testien suorittaminen onnistuu projektin juurihakemistossa komennolla
 ```
-poetry run pytest src
+poetry run pytest
 ```
 
 Yksikkötestausta on toteutettu kahdelle luokalle:
@@ -23,18 +23,19 @@ Yksikkötestausta on toteutettu kahdelle luokalle:
 Projektin testikattavuusraportti viedään automaattisesti Codecov-palveluun. Testikattavuutta pääsee tarkastelemaan klikkaamalla yllä olevaa codecov-merkkiä.
 
 #### Projektin testikattavuuden visualisointi käyttäen plotlya hyödyntävää [coverage-plot](https://pypi.org/project/coverage-plot/) -kirjastoa
-(Päivitetty 13.8.2022)
+(Päivitetty 20.8.2022)
 
-![tiralabra_coverage_2022-08-13](https://user-images.githubusercontent.com/32366546/184479447-7ed3f91b-f0fd-4613-8178-4269afacbc3d.png)
+![tiralabra_coverage_vko5](https://user-images.githubusercontent.com/32366546/185762152-d3efae94-40f4-4a19-ba1c-fd32ad246fec.png)
 
 Huomioitavaa: 
 - Komentorivikäyttöliittymän ja osan pelilogiikasta sisältävää [connect4.py](https://github.com/rheikkinen/tiralabra-connect4/blob/85a3ee4cff2e01c8c30b5b4d10c7df38432e1cd5/src/connect4.py) -moduulia ei tällä hetkellä ole yksikkötestattu. Tiedoston peliogiikka hyödyntää täysin GameBoard-olion metodeja, joita on testattu.
+- Moduulin ai.py testikattavuus on huonontunut tehtyjen muutosten jälkeen, koska yksikkötestit, joissa tarkastetaan valitseeko tekoäly varmasti voittavan siirron, eivät vaadi enää pelipuun syvempää tarkastelua. 
 
 
 #### Testikattavuuden kehitys kaaviona
-(Päivitetty 13.8.2022)
+(Päivitetty 20.8.2022)
 
-![re8p1i9p](https://user-images.githubusercontent.com/32366546/184478343-4d9f3835-97d5-4625-865f-b9b046a940f4.png)
+![9kmfaelik](https://user-images.githubusercontent.com/32366546/185762502-7af58099-8ccf-4580-be58-6523748e263b.png)
 
 - x-akseli: päivämäärä
 - y-akseli: testikattavuus prosentteina
