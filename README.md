@@ -45,3 +45,9 @@ Yksikkötestit voi suorittaa projektin juurihakemistossa komennolla
 ```
 poetry run pytest
 ```
+## Testikattavuus
+Testikattavuusraportin saa luotua projektin juurihakemistossa komennolla 
+```
+poetry run coverage run --branch -m pytest; poetry run coverage html
+``` 
+Testikattavuutta voi tarkastella avaamalla selaimessa hakemistoon **htmlcov** ilmestyneen tiedoston `index.html`. 
