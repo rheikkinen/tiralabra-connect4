@@ -53,12 +53,11 @@ class ConnectFour:
         while not self.game_over:
             self.print_board()
 
-
             if player != self.ai.player():
                 message = f"\nPelaaja {player}, syötä haluamasi sarake väliltä 1-7 tai lopeta peli syöttämällä q: "
                 user_input = input(message)
                 print("")
-                if user_input == "q" or user_input == "Q":
+                if user_input in ["q", "Q"]:
                     print("Peli lopetetaan.")
                     self.game_over = True
                 elif not self.valid_input(user_input):
@@ -68,7 +67,7 @@ class ConnectFour:
                     selected_column = int(user_input) - 1
 
             else:
-                print(f"Pelaaja {player} (tekoäly) valitsee sarakkeen.\n")
+                print(f"\nPelaaja {player} (tekoäly) valitsee sarakkeen.\n")
                 selected_column, _, runtime = self.ai.best_column(self.board)
                 self.ai_times.append(runtime)
 
@@ -91,7 +90,7 @@ class ConnectFour:
 
                 player = (player % 2) + 1
             else:
-                print(f"\nSarake {selected_column} on täynnä! Valitse toinen sarake.\n")
+                print(f"\nSarake {selected_column+1} on täynnä! Valitse toinen sarake.\n")
 
         average_time = sum(self.ai_times) / len(self.ai_times)
         print(f"\nTekoälyn suoritusaika keskimäärin: {average_time} sekuntia")

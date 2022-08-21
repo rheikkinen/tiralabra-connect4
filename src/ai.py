@@ -76,7 +76,7 @@ class AI:
 
         if maximizing: # Maksimoiva pelaaja
             if self.player_wins_next_move(board, self.opponent):
-               return MAX_SCORE, self._winning_move
+                return MAX_SCORE, self._winning_move
 
             max_value = MIN_SCORE
             valid_columns = board.get_available_columns()
@@ -104,7 +104,7 @@ class AI:
         # Minimoiva pelaaja (tekoäly)
         if self.player_wins_next_move(board, self.ai_player):
             return MIN_SCORE, self._winning_move
-        
+
         min_value = MAX_SCORE
         valid_columns = board.get_available_columns()
         best_column = None
@@ -129,16 +129,23 @@ class AI:
         return min_value, best_column
 
     def player_wins_next_move(self, board: GameBoard, player: int):
-        """Tarkastaa, onko pelaajalla mahdollisuus voittaa seuraavalla siirrolla."""
+        """Tarkastaa, onko pelaajalla mahdollisuus voittaa seuraavalla siirrolla.
+
+        :param board: Peliruudukko GameBoard-luokan oliona
+        :param player: Vuorossa oleva pelaaja, 1 tai 2
+
+        :rtype: bool
+        :return: Palauttaa True, jos pelaaja voi voittaa seuraavalla siirrolla.
+        Muuten palauttaa False.
+        """
         valid_moves = board.get_available_columns()
         for column in valid_moves:
             row = board.get_next_available_row(column)
-            board.update_position(row, column, value=player)
+            # Peliruudukkoon ei tehdä muutoksia, riittää tallettaa siirron tiedot GameBoard-oliolle
+            board.store_last_move(row, column, player)
             if board.check_for_win():
                 self._winning_move = column
-                board.clear_position(row, column)
                 return True
-            board.clear_position(row, column)
         return False
 
     def evaluate_board(self, board: GameBoard):
@@ -150,7 +157,6 @@ class AI:
         :rtype: int
         :return: Palauttaa pelitilanteelle lasketun pisteytyksen
         """
-
         # Viimeisimmän siirron tehnyt pelaaja
         _, _, player = board.get_last_move()
 
@@ -196,7 +202,8 @@ class AI:
 
     def get_block_value(self, block: list, player: int):
         """Pisteyttää neljän ruudun mittaisen lohkon vuorossa olevan pelaajan kannalta.
-        Lohko on lista, joka sisältää neljän peräkkäisen ruudun arvot vaaka-, pysty- tai vinosuunnassa.
+        Lohko on lista, joka sisältää neljän peräkkäisen ruudun arvot vaaka-, pysty-
+        tai vinosuunnassa.
 
         :param block: Pisteytettävä lohko
         :param player: Vuorossa oleva pelaaja, 1 tai 2

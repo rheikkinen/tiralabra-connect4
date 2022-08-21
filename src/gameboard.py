@@ -33,7 +33,7 @@ class GameBoard:
         return self._last_move
 
     def update_position(self, row: int, column: int, value: int):
-        """Asettaa parametrina annetun arvon annettuihin koordinaatteihin, 
+        """Asettaa parametrina annetun arvon annettuihin koordinaatteihin,
         tallettaa siirron tiedot muuttajaan ja kasvattaa siirtojen määrää yhdellä."""
         self._board[row][column] = value
         self.store_last_move(row, column, value)
@@ -82,11 +82,11 @@ class GameBoard:
         return True
 
     def check_for_win(self):
-        """Tarkastaa, onko viimeksi pudotettu kiekko muodostanut voittavan kiekkojonon.
+        """Hakee viimeisimmän siirron tiedot ja tarkastaa, onko siirto muodostanut
+        voittavan kiekkojonon vaakasuunnassa, pystysuunnassa tai vinottain.
 
         :rtype: bool
-        :return: Palauttaa True, jos viimeksi pelannut pelaaja on tehnyt voittavan siirron,
-        muuten False.
+        :return: Palauttaa True, jos viimeisin siirto on voittava siirto. Muuten palauttaa False.
         """
         last_row, last_column, player = self.get_last_move()
 
@@ -98,7 +98,7 @@ class GameBoard:
     def check_horizontal_discs(self, last_row: int, last_col: int, player_disc: int):
         """Tarkastaa, muodostaako pudotettu kiekko vaakasuunnassa voittavan
         kiekkojonon (oletus 4 kiekkoa). Palauttaa True, jos voittava jono löytyy.
-        Muuten palauttaa None."""
+        Muuten palauttaa False."""
         discs_in_a_row = 1
 
         # Tarkastetaan pudotetun kiekon oikealla puolella olevat ruudut
@@ -124,7 +124,7 @@ class GameBoard:
     def check_vertical_discs(self, last_row: int, last_col: int, player_disc: int):
         """Tarkastaa, muodostaako pudotettu kiekko pystysuunnassa voittavan
         kiekkojonon (oletus 4 kiekkoa). Palauttaa True, jos voittava jono löytyy.
-        Muuten palauttaa None."""
+        Muuten palauttaa False."""
         discs_in_a_row = 1
 
         # Tarkastetaan pudotetun kiekon alapuolella olevat ruudut
@@ -141,7 +141,7 @@ class GameBoard:
     def check_positive_diagonal(self, last_row: int, last_col: int, player_disc: int):
         """Tarkastaa, muodostaako pudotettu kiekko vinottain (nouseva suunta)
         voittavan kiekkojonon (oletus 4 kiekkoa). Palauttaa True, jos voittava
-        jono löytyy. Muuten paluttaa None."""
+        jono löytyy. Muuten paluttaa False."""
         discs_in_a_row = 1
 
         # Tarkastetaan ruudut pudotetusta kiekosta oikeaan yläviistoon
@@ -169,7 +169,7 @@ class GameBoard:
     def check_negative_diagonal(self, last_row: int, last_col: int, player_disc: int):
         """Tarkastaa, muodostaako pudotettu kiekko vinottain (laskeva suunta)
         voittavan kiekkojonon (oletus 4 kiekkoa). Palauttaa True, jos voittava
-        jono löytyy. Muuten palauttaa None."""
+        jono löytyy. Muuten palauttaa False."""
         discs_in_a_row = 1
 
         # Tarkastetaan ruudut pudotetusta kiekosta vasempaan yläviistoon
