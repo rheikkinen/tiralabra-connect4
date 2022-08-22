@@ -17,7 +17,6 @@ class ConnectFour:
         print(self.column_numbers, "\n")
         print(np.flip(self.board.get_board(), 0))
 
-
     def drop_disc(self, row, column, player):
         self.board.update_position(row, column, value=player)
 
