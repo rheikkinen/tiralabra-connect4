@@ -80,7 +80,7 @@ class AI:
 
             max_value = MIN_SCORE
             valid_columns = board.get_available_columns()
-            best_column = None
+            best_column = valid_columns[0]
 
             for column in valid_columns:
                 row = board.get_next_available_row(column)
@@ -107,7 +107,7 @@ class AI:
 
         min_value = MAX_SCORE
         valid_columns = board.get_available_columns()
-        best_column = None
+        best_column = valid_columns[0]
 
         for column in valid_columns:
             row = board.get_next_available_row(column)
