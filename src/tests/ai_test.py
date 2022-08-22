@@ -1,4 +1,5 @@
 import unittest
+import numpy as np
 
 from gameboard import GameBoard
 from ai import AI
@@ -12,162 +13,198 @@ class TestAI(unittest.TestCase):
         self.ai = AI()
 
     def test_ai_chooses_winning_move_horizontally(self):
-        """Tarkastaa, että tekoälyn best_column metodi palauttaa voittavan sarakkeen, jos
-        vaakasuunnassa on mahdollisuus tehdä voittava siirto."""
-        # Alustetaan pelilauta
-        for col in range(3):
-            self.board.update_position(row=0, column=col, value=2)
-            self.board.update_position(row=1, column=col, value=1)
-
-        for col in range(5, 7):
-            self.board.update_position(row=1, column=col, value=2)
-            self.board.update_position(row=0, column=col, value=1)
-
-        # PELILAUDAN TILANNE
+        """Tarkastaa, että tekoälyn metodi best_column palauttaa voittavan sarakkeen, jos
+        vaakasuunnassa on mahdollisuus voittoon yhdellä siirrolla."""
+        # Alustetaan pelilaudan tilanne
         # 2 = tekoälyn kiekko
+        # 1 = vastustajan kiekko
         # 0 = tyhjä ruutu
 
-        #  0 1 2 3 4 5 6  <-- sarakeindeksit
-        #  0 0 0 0 0 0 0  # 5
-        #  0 0 0 0 0 0 0  # 4
-        #  0 0 0 0 0 0 0  # 3
-        #  0 0 0 0 0 0 0  # 2
-        #  1 1 1 0 0 2 2  # 1
-        #  2 2 2 0 0 1 1  # 0 rivi-indeksit
+        # Sarakeindeksit  --->      0 1 2 3 4 5 6
+        test_situation = np.array([[0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,0,0],
+                                   [1,1,1,0,0,2,2],
+                                   [2,2,2,0,0,1,1]])
+
+        self.board.set_game_situation(test_situation)
 
         # Tekoälyn pitäisi valita sarakeindeksi 3 (voitto)
         best_column = self.ai.best_column(self.board)[0]
-        self.assertEqual(best_column, 3, "Sarakkeen pitäisi olla 3!")
+        self.assertEqual(best_column, 3)
 
     def test_ai_chooses_winning_move_in_positive_diagonal(self):
-        """Tarkastaa, että tekoälyn best_column metodi palauttaa voittavan sarakkeen, jos
-        vinottain nousevassa suunnassa on mahdollisuus tehdä voittava siirto."""
-        # Alustetaan pelilauta
-        self.board.update_position(row=0, column=0, value=2)
-        self.board.update_position(row=0, column=1, value=1)
-        self.board.update_position(row=0, column=2, value=2)
-        self.board.update_position(row=0, column=3, value=2)
-        self.board.update_position(row=0, column=4, value=1)
-        self.board.update_position(row=1, column=0, value=1)
-        self.board.update_position(row=1, column=1, value=2)
-        self.board.update_position(row=1, column=2, value=1)
-        self.board.update_position(row=1, column=3, value=1)
-        self.board.update_position(row=2, column=3, value=1)
-        self.board.update_position(row=3, column=3, value=2)
-
-        # PELILAUDAN TILANNE
+        """Tarkastaa, että tekoälyn metodi best_column palauttaa voittavan sarakkeen, jos
+        vinottain nousevassa suunnassa on mahdollisuus voittoon yhdellä siirrolla."""
+        # Alustetaan pelilaudan tilanne
         # 2 = tekoälyn kiekko
+        # 1 = vastustajan kiekko
         # 0 = tyhjä ruutu
 
-        #  0 1 2 3 4 5 6  <-- sarakeindeksit
-        #  0 0 0 0 0 0 0  # 5
-        #  0 0 0 0 0 0 0  # 4
-        #  0 0 0 2 0 0 0  # 3
-        #  0 0 0 1 0 0 0  # 2
-        #  1 2 1 1 0 0 0  # 1
-        #  2 1 2 2 1 0 0  # 0 rivi-indeksit
+        # Sarakeindeksit  --->      0 1 2 3 4 5 6
+        test_situation = np.array([[0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,0,0],
+                                   [1,0,0,2,0,0,0],
+                                   [1,0,0,1,0,0,0],
+                                   [1,2,1,1,0,0,0],
+                                   [2,1,2,2,0,0,0]])
+
+        self.board.set_game_situation(test_situation)
 
         # Tekoälyn pitäisi valita sarakeindeksi 2 (voitto)
         best_column = self.ai.best_column(self.board)[0]
-        self.assertEqual(best_column, 2, "Sarakkeen pitäisi olla 2!")
+        self.assertEqual(best_column, 2)
 
     def test_ai_chooses_winning_move_in_negative_diagonal(self):
-        """Tarkastaa, että tekoälyn best_column metodi palauttaa voittavan sarakkeen, jos
-        vinottain laskevassa suunnassa on mahdollisuus tehdä voittava siirto."""
-        # Alustetaan pelilauta
-        self.board.update_position(row=0, column=0, value=2)
-        self.board.update_position(row=0, column=1, value=1)
-        self.board.update_position(row=0, column=2, value=1)
-        self.board.update_position(row=0, column=3, value=2)
-        self.board.update_position(row=1, column=0, value=1)
-        self.board.update_position(row=1, column=1, value=1)
-        self.board.update_position(row=1, column=2, value=2)
-        self.board.update_position(row=1, column=3, value=1)
-        self.board.update_position(row=2, column=0, value=1)
-        self.board.update_position(row=2, column=1, value=2)
-
-        # PELILAUDAN TILANNE
+        """Tarkastaa, että tekoälyn metodi best_column palauttaa voittavan sarakkeen, jos
+        vinottain laskevassa suunnassa on mahdollisuus voittoon yhdellä siirrolla."""
+        # Alustetaan pelilaudan tilanne
         # 2 = tekoälyn kiekko
+        # 1 = vastustajan kiekko
         # 0 = tyhjä ruutu
 
-        #  0 1 2 3 4 5 6  <-- sarakeindeksit
-        #  0 0 0 0 0 0 0  # 5
-        #  0 0 0 0 0 0 0  # 4
-        #  0 0 0 0 0 0 0  # 3
-        #  1 2 0 0 0 0 0  # 2
-        #  1 1 2 1 0 0 0  # 1
-        #  2 1 1 2 0 0 0  # 0 rivi-indeksit
-        
+        # Sarakeindeksit  --->      0 1 2 3 4 5 6
+        test_situation = np.array([[0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,0,0],
+                                   [0,0,0,1,0,0,0],
+                                   [1,2,1,1,0,0,0],
+                                   [2,1,2,1,0,2,0],
+                                   [2,1,1,2,0,2,0]])
+
+        self.board.set_game_situation(test_situation)
+
         # Tekoälyn pitäisi valita sarakeindeksi 0 (voitto)
         best_column = self.ai.best_column(self.board, depth=4)[0]
         self.assertEqual(best_column, 0)
 
     def test_ai_chooses_winning_move_vertically(self):
-        """Tarkastaa, että tekoälyn best_column metodi palauttaa voittavan sarakkeen, jos
-        pystysuunnassa on mahdollisuus tehdä voittava siirto."""
-        # Alustetaan pelilauta
-        self.board.update_position(row=0, column=0, value=1)
-        self.board.update_position(row=0, column=1, value=2)
-        self.board.update_position(row=0, column=2, value=1)
-        self.board.update_position(row=0, column=3, value=1)
-        self.board.update_position(row=1, column=0, value=1)
-        self.board.update_position(row=1, column=1, value=2)
-        self.board.update_position(row=1, column=2, value=2)
-        self.board.update_position(row=1, column=3, value=1)
-        self.board.update_position(row=2, column=1, value=2)
-
-        # PELILAUDAN TILANNE
+        """Tarkastaa, että tekoälyn metodi best_column palauttaa voittavan sarakkeen, jos
+        pystysuunnassa on mahdollisuus voittoon yhdellä siirrolla."""
+        # Alustetaan pelilaudan tilanne
         # 2 = tekoälyn kiekko
+        # 1 = vastustajan kiekko
         # 0 = tyhjä ruutu
 
-        #  0 1 2 3 4 5 6  <-- sarakeindeksit
-        #  0 0 0 0 0 0 0  # 5
-        #  0 0 0 0 0 0 0  # 4
-        #  0 0 0 0 0 0 0  # 3
-        #  0 2 0 0 0 0 0  # 2
-        #  1 2 2 1 0 0 0  # 1
-        #  1 2 1 1 0 0 0  # 0 rivi-indeksit
-        
+        # Sarakeindeksit  --->      0 1 2 3 4 5 6
+        test_situation = np.array([[0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,0,0],
+                                   [2,2,0,0,0,0,0],
+                                   [1,2,2,1,0,0,1],
+                                   [2,2,1,1,0,0,1]])
+
+        self.board.set_game_situation(test_situation)
+
         # Tekoälyn pitäisi valita sarakeindeksi 1 (voitto)
         best_column = self.ai.best_column(self.board, depth=4)[0]
         self.assertEqual(best_column, 1)
 
     def test_ai_evaluates_draw_game_state_correctly(self):
-        """Tarkastaa, että tekoälyn best_column metodi palauttaa viimeisen vapaan sarakkeen
+        """Tarkastaa, että tekoälyn metodi best_column palauttaa viimeisen vapaan sarakkeen
         pisteytyksellä 0, kun jäljellä on vain yksi mahdollinen siirto, joka johtaa tasapeliin. """
-        # Alustetaan pelilauta
-        for i in range(0, 6):
-            if i % 2 == 0:
-                a, b = 2, 1
-            else:
-                a, b = 1, 2
-            self.board.update_position(row=0, column=i, value=a)
-            self.board.update_position(row=1, column=i, value=a)
-            self.board.update_position(row=2, column=i, value=a)
-            self.board.update_position(row=3, column=i, value=b)
-            self.board.update_position(row=4, column=i, value=b)
-            self.board.update_position(row=5, column=i, value=b)
-        self.board.update_position(row=0, column=6, value=2)
-        self.board.update_position(row=1, column=6, value=2)
-        self.board.update_position(row=2, column=6, value=2)
-        self.board.update_position(row=3, column=6, value=1)
-        self.board.update_position(row=4, column=6, value=1)
-
-        # PELILAUDAN TILANNE
+        # Alustetaan pelilaudan tilanne
         # 2 = tekoälyn kiekko
+        # 1 = vastustajan kiekko
         # 0 = tyhjä ruutu
 
-        #  0 1 2 3 4 5 6  <-- sarakeindeksit
+        # Sarakeindeksit  --->      0 1 2 3 4 5 6
+        test_situation = np.array([[1,2,1,2,1,2,0],
+                                   [1,2,1,2,1,2,1],
+                                   [1,2,1,2,1,2,2],
+                                   [2,1,2,1,2,1,1],
+                                   [2,1,2,1,2,1,2],
+                                   [2,1,2,1,2,1,2]])
 
-        #  1 2 1 2 1 2 0  # 5
-        #  1 2 1 2 1 2 1  # 4
-        #  1 2 1 2 1 2 1  # 3
-        #  2 1 2 1 2 1 2  # 2
-        #  2 1 2 1 2 1 2  # 1
-        #  2 1 2 1 2 1 2  # 0 rivi-indeksit
+        self.board.set_game_situation(test_situation)
 
-        # Tekoälyn pitäisi valita sarake-indeksi 6 (viimeinen vapaa ruutu) pisteytyksellä 0 (tasapeli)
+        # Tekoälyn pitäisi valita sarakeindeksi 6 (viimeinen vapaa ruutu) pisteytyksellä 0 (tasapeli)
         column, value, _ = self.ai.best_column(self.board)
 
         self.assertEqual(column, 6)
         self.assertEqual(value, 0)
+
+    def test_ai_blocks_horizontal_win_for_opponent(self):
+        """Tarkastaa, että tekoälyn metodi best_column palauttaa siirron, joka estää
+        vastustajaa voittamasta vaakasuunnassa seuraavalla siirrolla."""
+        # Alustetaan pelilaudan tilanne
+        # 2 = tekoälyn kiekko
+        # 1 = vastustajan kiekko
+        # 0 = tyhjä ruutu
+
+        # Sarakeindeksit  --->      0 1 2 3 4 5 6
+        test_situation = np.array([[0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,0,0],
+                                   [2,2,0,0,0,0,0],
+                                   [1,2,2,1,0,0,1],
+                                   [2,1,2,1,1,0,1]])
+
+        self.board.set_game_situation(test_situation)
+
+        # Tekoälyn pitäisi valita sarakeindeksi 5
+        best_column = self.ai.best_column(self.board, depth=4)[0]
+        self.assertEqual(best_column, 5)
+
+    def test_ai_blocks_vertical_win_for_opponent(self):
+        """Tarkastaa, että tekoälyn metodi best_column palauttaa siirron, joka estää
+        vastustajaa voittamasta pystysuunnassa seuraavalla siirrolla."""
+        # Alustetaan pelilaudan tilanne
+        # 2 = tekoälyn kiekko
+        # 1 = vastustajan kiekko
+        # 0 = tyhjä ruutu
+
+        # Sarakeindeksit  --->      0 1 2 3 4 5 6
+        test_situation = np.array([[0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,1,0],
+                                   [1,0,0,2,1,2,0],
+                                   [1,0,2,1,2,2,1],
+                                   [1,0,2,2,1,2,1]])
+
+        self.board.set_game_situation(test_situation)
+        # Tekoälyn pitäisi valita sarakeindeksi 0
+        best_column = self.ai.best_column(self.board, depth=4)[0]
+        self.assertEqual(best_column, 0)
+
+    def test_ai_blocks_positive_diagonal_win_for_opponent(self):
+        """Tarkastaa, että tekoälyn metodi best_column palauttaa siirron, joka estää
+        vastustajaa voittamasta seuraavalla siirrolla vinottain nousevassa suunnassa."""
+        # Alustetaan pelilaudan tilanne
+        # 2 = tekoälyn kiekko
+        # 1 = vastustajan kiekko
+        # 0 = tyhjä ruutu
+
+        # Sarakeindeksit  --->      0 1 2 3 4 5 6
+        test_situation = np.array([[0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,0,0],
+                                   [0,0,0,2,0,0,1],
+                                   [0,0,0,2,0,0,2],
+                                   [0,0,2,1,1,2,1],
+                                   [0,0,2,1,1,2,1]])
+
+        self.board.set_game_situation(test_situation)
+        # Tekoälyn pitäisi valita sarakeindeksi 5
+        best_column = self.ai.best_column(self.board, depth=4)[0]
+        self.assertEqual(best_column, 5)
+
+    def test_ai_blocks_negative_diagonal_win_for_opponent(self):
+        """Tarkastaa, että tekoälyn metodi best_column palauttaa siirron, joka estää
+        vastustajaa voittamasta seuraavalla siirrolla vinottain laskevassa suunnassa."""
+        # Alustetaan pelilaudan tilanne
+        # 2 = tekoälyn kiekko
+        # 1 = vastustajan kiekko
+        # 0 = tyhjä ruutu
+
+        # Sarakeindeksit  --->      0 1 2 3 4 5 6
+        test_situation = np.array([[0,0,0,0,0,0,0],
+                                   [0,0,0,0,0,0,0],
+                                   [0,0,1,2,0,0,0],
+                                   [0,0,2,1,0,0,0],
+                                   [0,0,2,1,1,0,0],
+                                   [0,1,2,2,1,0,0]])
+
+        self.board.set_game_situation(test_situation)
+        # Tekoälyn pitäisi valita sarakeindeksi 5
+        best_column = self.ai.best_column(self.board, depth=4)[0]
+        self.assertEqual(best_column, 5)

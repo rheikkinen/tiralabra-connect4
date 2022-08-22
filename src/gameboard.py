@@ -19,6 +19,11 @@ class GameBoard:
         self._board = self.init_board(self.rows, self.columns)
         self._moves_count = 0
 
+    def set_game_situation(self, game_situation: np.ndarray):
+        """Testauksessa pelitilanteen määrittämiseen käytettävä metodi, joka
+        asettaa peliruudukoksi parametrina annetun taulukon."""
+        self._board = np.flip(game_situation, 0)
+
     def get_board(self):
         return self._board
 
