@@ -38,7 +38,7 @@ poetry install
 poetry run python3 src/play.py
 ```
 
-Pelin pelilauta on 2-ulotteinen taulukko, jossa 0 on tyhjä ruutu, 1 on käyttäjän kiekko, ja 2 on pelitekoälyn kiekko. Tällä hetkellä käyttäjä on aina aloittava pelaaja.
+Pelin pelilauta on 2-ulotteinen taulukko, jossa 0 on tyhjä ruutu, 1 on käyttäjän kiekko, ja 2 on pelitekoälyn kiekko. Tällä hetkellä käyttäjä on aina aloittava pelaaja, mutta halutessaan aloitusvuoroa voi vaihtaa muokkaamalla `src/connect4.py`:ssä [tätä riviä](https://github.com/rheikkinen/tiralabra-connect4/blob/1f2020ca339b26a1749be9ecc2980c5a252e25b7/src/connect4.py#L49).
 
 ## Yksikkötestit
 Yksikkötestit voi suorittaa projektin juurihakemistossa komennolla
