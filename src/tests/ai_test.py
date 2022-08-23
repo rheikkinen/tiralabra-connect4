@@ -226,7 +226,28 @@ class TestAI(unittest.TestCase):
                                    [1,2,1,2,1,2,2]])
 
         self.board.set_game_situation(test_situation)
-        # Tekoälyn pitäisi valita sarakeindeksi 1 huonoimmalla pisteytyksellä 10 000 000
+        # Tekoälyn pitäisi valita sarakeindeksi 1
         best_column, score, _ = self.ai.best_column(self.board, depth=4)
         self.assertEqual(best_column, 1)
-        self.assertEqual(score, 10_000_000)
+
+    def test_ai_chooses_column_that_results_in_fastest_win(self):
+        """Tarkastaa, että metodi best_column valitsee sarakkeen, joka johtaa
+        tekoälyn voittoon nopeiten. Testitilanteessa valitsemalla sarakkeen 6,
+        tekoäly saavuttaa varman voiton 2 siirrolla."""
+        # Alustetaan pelilaudan tilanne
+        # 2 = tekoälyn kiekko
+        # 1 = vastustajan kiekko
+        # 0 = tyhjä ruutu
+
+        # Sarakeindeksit  --->      0 1 2 3 4 5 6
+        test_situation = np.array([[0,0,0,0,0,0,0],
+                                   [0,0,0,2,2,2,0],
+                                   [0,0,0,2,1,1,0],
+                                   [0,0,0,1,2,2,0],
+                                   [1,1,2,1,2,1,2],
+                                   [1,2,1,2,2,1,1]])
+
+        self.board.set_game_situation(test_situation)
+        # Tekoälyn pitäisi valita sarakeindeksi 6
+        best_column = self.ai.best_column(self.board, depth=7)[0]
+        self.assertEqual(best_column, 6)

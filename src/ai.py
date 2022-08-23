@@ -1,3 +1,4 @@
+from math import inf
 from random import randint
 from time import time
 from constants import ROW_COUNT, COL_COUNT
@@ -37,7 +38,7 @@ class AI:
             start_time = time()
 
             # Alfan ja betan alkuarvot
-            alpha, beta = MIN_SCORE, MAX_SCORE
+            alpha, beta = -inf, inf
 
             value, column = self.minimax(board, alpha, beta, depth, maximizing=False)
 
@@ -76,9 +77,9 @@ class AI:
 
         if maximizing: # Maksimoiva pelaaja
             if self.player_wins_next_move(board, self.opponent):
-                return MAX_SCORE, self._winning_move
+                return MAX_SCORE*depth, self._winning_move
 
-            max_value = MIN_SCORE
+            max_value = -inf
             valid_columns = board.get_available_columns()
             best_column = valid_columns[0]
 
@@ -103,9 +104,9 @@ class AI:
 
         # Minimoiva pelaaja (tekoäly)
         if self.player_wins_next_move(board, self.ai_player):
-            return MIN_SCORE, self._winning_move
+            return MIN_SCORE*depth, self._winning_move
 
-        min_value = MAX_SCORE
+        min_value = inf
         valid_columns = board.get_available_columns()
         best_column = valid_columns[0]
 
