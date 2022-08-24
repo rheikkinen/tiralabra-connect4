@@ -45,9 +45,10 @@ class AI:
             end_time = time()
             runtime = end_time - start_time
 
-            print(f"Minimax valitsi sarakkeen {column + 1} pisteytyksellä {value}")
             print(f"Pelipuun solmuja käsitelty: {self.nodes_visited} kpl")
             print(f"Minimax-algoritmin suoritusaika: {runtime} sekuntia\n")
+            print(f"Minimax valitsi sarakkeen {column + 1} pisteytyksellä {value}\n")
+
 
         return column, value, runtime
 
@@ -141,6 +142,7 @@ class AI:
         """
         valid_moves = board.get_available_columns()
         for column in valid_moves:
+            self.nodes_visited += 1
             row = board.get_next_available_row(column)
             # Peliruudukkoon ei tehdä muutoksia, riittää tallettaa siirron tiedot GameBoard-oliolle
             board.store_last_move(row, column, player)
