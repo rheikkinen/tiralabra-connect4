@@ -31,7 +31,8 @@ class ConnectFour:
     def player_won(self):
         """Palauttaa True, jos viimeksi pudotettu kiekko muodostaa lähellä olevien
         kiekkojen kanssa voittavan kiekkojonon. Muuten palauttaa False."""
-        return self.board.check_for_win()
+        row, column, player = self.board.get_last_move()
+        return self.board.check_for_win(row, column, player)
 
     def valid_input(self, user_input):
         """Validoi käyttäjän antaman syötteen."""
