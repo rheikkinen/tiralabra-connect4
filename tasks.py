@@ -12,3 +12,7 @@ def test(c):
 def coverage(c):
     c.run("coverage run --branch -m pytest", pty=True)
     c.run("coverage html", pty=True)
+
+@task
+def lint(c):
+    c.run("pylint src", pty=True)
