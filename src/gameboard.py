@@ -4,6 +4,7 @@ import numpy as np
 from constants import COL_COUNT, EMPTY, ROW_COUNT, ORDER
 
 class GameBoard:
+    """Luokan vastuulla on pelitilanteen ylläpito ja muut pelilautaan kohdistuvat metodit."""
     def __init__(self, rows=ROW_COUNT, columns=COL_COUNT, winning_row=4):
         self.rows = rows
         self.columns = columns
@@ -13,9 +14,11 @@ class GameBoard:
         self._moves_count = 0
 
     def init_board(self, rows: int, columns: int):
+        """Palauttaa 2-ulotteisen taulukon, joka on täytetty nollilla."""
         return np.zeros((rows, columns), dtype=int)
 
     def reset_board(self):
+        """Palauttaa pelilaudan alkutilaan (kaikki ruudut tyhjiä eli arvoiltaan 0)."""
         self._board = self.init_board(self.rows, self.columns)
         self._moves_count = 0
 
@@ -75,30 +78,39 @@ class GameBoard:
         return valid_columns
 
     def get_next_available_row(self, column: int):
+        """Hakee seuraavan vapaana olevan rivin annetussa sarakkeessa ja palauttaa
+        rivin indeksin."""
         for row in range(ROW_COUNT):
             if self.get_position(row, column) == 0:
                 return row
         return None
 
     def board_is_full(self):
+        """Tarkastaa, onko peliruudukko täynnä.
+
+        :rtype: bool
+        :return: Palauttaa True, jos yksikään ruudukon sarakkeista ei ole vapaa.
+        Muuten palauttaa False."""
         for column in range(COL_COUNT):
             if self.column_is_available(column):
                 return False
         return True
 
-    def check_for_win(self):
-        """Hakee viimeisimmän siirron tiedot ja tarkastaa, onko siirto muodostanut
+    def check_for_win(self, row: int, column: int, player: int):
+        """Tarkastaa, muodostaako parametrina annettu siirto
         voittavan kiekkojonon vaakasuunnassa, pystysuunnassa tai vinottain.
 
-        :rtype: bool
-        :return: Palauttaa True, jos viimeisin siirto on voittava siirto. Muuten palauttaa False.
-        """
-        last_row, last_column, player = self.get_last_move()
+        :param row: Siirron rivi-indeksi
+        :param column: Siirron sarake-indeksi
+        :param player: Siirron tehnyt pelaaja, 1 tai 2
 
-        return self.check_horizontal_discs(last_row, last_column, player) \
-            or self.check_vertical_discs(last_row, last_column, player) \
-            or self.check_positive_diagonal(last_row, last_column, player) \
-            or self.check_negative_diagonal(last_row, last_column, player)
+        :rtype: bool
+        :return: Palauttaa True, jos siirto on voittava siirto. Muuten palauttaa False.
+        """
+        return self.check_horizontal_discs(row, column, player) \
+            or self.check_vertical_discs(row, column, player) \
+            or self.check_positive_diagonal(row, column, player) \
+            or self.check_negative_diagonal(row, column, player)
 
     def check_horizontal_discs(self, last_row: int, last_col: int, player_disc: int):
         """Tarkastaa, muodostaako pudotettu kiekko vaakasuunnassa voittavan
