@@ -5,7 +5,8 @@ from gameboard import GameBoard
 from ai import AI
 
 class TestAI(unittest.TestCase):
-    """Yksikkötestit, jotka testaavat AI-luokan metodien eli pelitekoälyn toiminnallisuutta."""
+    """Yksikkötestit, jotka testaavat AI-luokan metodien eli pelitekoälyn toiminnallisuutta.
+    Minimax-algoritmin laskentasyvyys testeissä on 7."""
     def setUp(self):
         """Alustusmetodi, jossa luodaan oliot pelilaudalle ja pelitekoälylle.
         Suoritetaan ennen jokaista testitapausta."""
@@ -75,7 +76,7 @@ class TestAI(unittest.TestCase):
         self.board.set_game_situation(test_situation)
 
         # Tekoälyn pitäisi valita sarakeindeksi 0 (voitto)
-        best_column = self.ai.best_column(self.board, depth=4)[0]
+        best_column = self.ai.best_column(self.board)[0]
         self.assertEqual(best_column, 0)
 
     def test_ai_chooses_winning_move_vertically(self):
@@ -97,7 +98,7 @@ class TestAI(unittest.TestCase):
         self.board.set_game_situation(test_situation)
 
         # Tekoälyn pitäisi valita sarakeindeksi 1 (voitto)
-        best_column = self.ai.best_column(self.board, depth=4)[0]
+        best_column = self.ai.best_column(self.board)[0]
         self.assertEqual(best_column, 1)
 
     def test_ai_evaluates_draw_game_state_correctly(self):
@@ -143,7 +144,7 @@ class TestAI(unittest.TestCase):
         self.board.set_game_situation(test_situation)
 
         # Tekoälyn pitäisi valita sarakeindeksi 5
-        best_column = self.ai.best_column(self.board, depth=4)[0]
+        best_column = self.ai.best_column(self.board)[0]
         self.assertEqual(best_column, 5)
 
     def test_ai_blocks_vertical_win_for_opponent(self):
@@ -164,7 +165,7 @@ class TestAI(unittest.TestCase):
 
         self.board.set_game_situation(test_situation)
         # Tekoälyn pitäisi valita sarakeindeksi 0
-        best_column = self.ai.best_column(self.board, depth=4)[0]
+        best_column = self.ai.best_column(self.board)[0]
         self.assertEqual(best_column, 0)
 
     def test_ai_blocks_positive_diagonal_win_for_opponent(self):
@@ -185,7 +186,7 @@ class TestAI(unittest.TestCase):
 
         self.board.set_game_situation(test_situation)
         # Tekoälyn pitäisi valita sarakeindeksi 5
-        best_column = self.ai.best_column(self.board, depth=4)[0]
+        best_column = self.ai.best_column(self.board)[0]
         self.assertEqual(best_column, 5)
 
     def test_ai_blocks_negative_diagonal_win_for_opponent(self):
@@ -206,7 +207,7 @@ class TestAI(unittest.TestCase):
 
         self.board.set_game_situation(test_situation)
         # Tekoälyn pitäisi valita sarakeindeksi 5
-        best_column = self.ai.best_column(self.board, depth=4)[0]
+        best_column = self.ai.best_column(self.board)[0]
         self.assertEqual(best_column, 5)
 
     def test_ai_chooses_last_free_column_even_if_it_results_in_defeat(self):
@@ -227,7 +228,7 @@ class TestAI(unittest.TestCase):
 
         self.board.set_game_situation(test_situation)
         # Tekoälyn pitäisi valita sarakeindeksi 1
-        best_column, score, _ = self.ai.best_column(self.board, depth=4)
+        best_column = self.ai.best_column(self.board)[0]
         self.assertEqual(best_column, 1)
 
     def test_ai_chooses_column_that_results_in_fastest_win(self):
@@ -249,5 +250,5 @@ class TestAI(unittest.TestCase):
 
         self.board.set_game_situation(test_situation)
         # Tekoälyn pitäisi valita sarakeindeksi 6
-        best_column = self.ai.best_column(self.board, depth=7)[0]
+        best_column = self.ai.best_column(self.board)[0]
         self.assertEqual(best_column, 6)
