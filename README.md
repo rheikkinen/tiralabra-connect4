@@ -19,6 +19,7 @@ Harjoitustyö, jonka aiheena on Connect Four -pelille toteutettava tekoäly, jot
 - [Viikko 3](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/viikkoraportit/viikkoraportti_3.md)
 - [Viikko 4](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/viikkoraportit/viikkoraportti_4.md)
 - [Viikko 5](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/viikkoraportit/viikkoraportti_5.md)
+- [Viikko 6](https://github.com/rheikkinen/tiralabra-connect4/blob/main/dokumentaatio/viikkoraportit/viikkoraportti_6.md)
 
 ## Sovelluksen käyttöönotto
 Sovellus toimii ainoastaan paikallisesti käyttäjän omalla tietokoneella, ja sitä käytetään komentoriviltä.
@@ -35,27 +36,17 @@ poetry install
 
 3. Käynnistä sovellus suorittamalla komento:
 ```
-poetry run invoke play
+poetry run inv play
 ```
-tai komennolla:
-```
-poetry run python3 src/play.py
-```
-
-Pelin pelilauta on 2-ulotteinen taulukko, jossa 0 on tyhjä ruutu, 1 on käyttäjän kiekko, ja 2 on pelitekoälyn kiekko. Tällä hetkellä käyttäjä on aina aloittava pelaaja, mutta halutessaan aloitusvuoroa voi vaihtaa muokkaamalla `src/connect4.py`:ssä [tätä riviä](https://github.com/rheikkinen/tiralabra-connect4/blob/1f2020ca339b26a1749be9ecc2980c5a252e25b7/src/connect4.py#L49).
 
 ## Yksikkötestit
 Yksikkötestit voi suorittaa projektin juurihakemistossa komennolla:
 ```
-poetry run invoke test
-```
-tai komennolla:
-```
-poetry run pytest
+poetry run inv test
 ```
 ## Testikattavuus
 Testikattavuusraportin saa luotua projektin juurihakemistossa komennolla :
 ```
-poetry run invoke coverage
+poetry run inv coverage
 ``` 
-Testikattavuutta voi tarkastella avaamalla selaimessa hakemistosta **htmlcov** löytyvän tiedoston `index.html`. 
+Testikattavuutta voi tarkastella avaamalla selaimessa hakemistosta **htmlcov** löytyvän tiedoston `index.html`.
