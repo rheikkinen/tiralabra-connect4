@@ -7,7 +7,7 @@ MAX_SCORE = 10_000_000
 MIN_SCORE = -10_000_000
 
 class AI:
-    def __init__(self, level=2, player=2):
+    def __init__(self, level=3, player=2):
         self.level = level
         self.ai_player = player
         self.opponent = (player % 2) + 1
@@ -29,9 +29,9 @@ class AI:
         :return: Palauttaa valitun sarakkeen indeksin, siirrolle lasketun pisteytyksen
         ja laskennan suoritusajan sekunteina.
         """
-        if self.level == 0:
-            depth = 0
         if self.level == 1:
+            depth = 1
+        if self.level == 2:
             depth = 4
 
         self.nodes_visited = 0
@@ -223,5 +223,7 @@ class AI:
             return 4
         if opponent_discs == 3 and empty_count == 1:
             return -10
+        if opponent_discs == 2 and empty_count == 2:
+            return -4
 
         return 0
