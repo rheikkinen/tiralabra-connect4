@@ -18,15 +18,9 @@ Ohjelma on jaettu sen toiminnan kannalta kolmeen merkittävään moduuliin:
 - [`gameboard.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/c60adfb997e4172bd5e263598fd00a1d26945109/src/gameboard.py) sisältää pelissä käytettävän pelilautaolion ja sen metodit, jotka toteuttavat suurimman osan pelilogiikasta
 - [`ai.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/c60adfb997e4172bd5e263598fd00a1d26945109/src/ai.py) sisältää pelitekoälyn toiminnallisuudet, tärkeimpänä minimax-algoritmi ja alfa-beta -karsinta
 
-Lisäksi erillinen [constants.py](https://github.com/rheikkinen/tiralabra-connect4/blob/c60adfb997e4172bd5e263598fd00a1d26945109/src/constants.py) -tiedosto sisältää ohjelmakoodissa usein käytettävät vakioarvot ja -tietorakenteet:
-- Peliruudukon rivien lukumäärä `ROW_COUNT`
-- Peliruudukon sarakkeiden lukumäärä `COL_COUNT`
-- Tyhjän ruudun arvo peliruudukossa `EMPTY`
-- Sarakkeiden läpikäyntijärjestys pelitekoälyä varten `ORDER`
-    - Järjestys on keskimmäisestä reunimmaisiin sarakkeisiin, sillä keskimmäiset sarakkeet ovat keskimäärin pelin kannalta hyödyllisemmät. 
-- Sarakkeiden numerot `COLUMN_NUMBERS`
+Erilliseen [`constants.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/c60adfb997e4172bd5e263598fd00a1d26945109/src/constants.py) -tiedostoon on talletettu ohjelmakoodissa usein käytettäviä vakioarvoja ja -tietorakenteita.
 
-Ohjelma käynnistetään komentoriviltä suorittamalla tiedosto [play.py](https://github.com/rheikkinen/tiralabra-connect4/blob/c60adfb997e4172bd5e263598fd00a1d26945109/src/play.py).
+Ohjelma käynnistetään komentoriviltä suorittamalla tiedosto [`play.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/c60adfb997e4172bd5e263598fd00a1d26945109/src/play.py).
 
 ## Pelitekoälyn toiminta
 Pelitekoälyn toteutuksessa on käytetty minimax-algoritmia ja alfa-beta -karsintaa. Luokan AI metodi `best_column` saa parametrina pelilaudan tilanteen `GameBoard`-oliona sekä laskentasyvyyden (kuinka monen siirron päähän halutaan laskea). Metodi suorittaa alfa-beta -karsintaa käyttävän `minimax`-algoritmin metodin, joka käy pelipuuta rekursiivisesti annettuun laskentasyvyyteen saakka ja palauttaa parhaaksi arvioidun sarakkeen.
