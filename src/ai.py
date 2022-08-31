@@ -7,9 +7,9 @@ MAX_SCORE = 10_000_000
 MIN_SCORE = -10_000_000
 
 class AI:
-    def __init__(self, level=3, player=2):
-        self.level = level
+    def __init__(self, depth=7, player=2):
         self.ai_player = player
+        self.depth = depth
         self.opponent = (player % 2) + 1
         self.nodes_visited = 0
         self._winning_move = None
@@ -17,9 +17,9 @@ class AI:
     def player(self):
         return self.ai_player
 
-    def best_column(self, board: GameBoard, depth: int = 7):
+    def best_column(self, board: GameBoard):
         """Valitsee pelitekoälylle seuraavaksi tehtävän siirron käyttäen
-        minimax-algoritmia. Tekoälylle määritetty vaikeustaso (level) vaikuttaa
+        minimax-algoritmia. Tekoälylle määritetty syvyys (depth) vaikuttaa
         laskentasyvyyteen eli siihen, kuinka monta siirtoa algoritmi laskee eteenpäin.
 
         :param board: Peliruudukko GameBoard-luokan oliona
@@ -29,17 +29,12 @@ class AI:
         :return: Palauttaa valitun sarakkeen indeksin, siirrolle lasketun pisteytyksen
         ja laskennan suoritusajan sekunteina.
         """
-        if self.level == 1:
-            depth = 1
-        if self.level == 2:
-            depth = 4
-
         self.nodes_visited = 0
 
         alpha, beta = -inf, inf # Alfan ja betan alkuarvot
 
         start_time = time()
-        value, column = self.minimax(board, alpha, beta, depth, maximizing=False)
+        value, column = self.minimax(board, alpha, beta, depth=self.depth, maximizing=False)
         runtime = time() - start_time
 
         print(f"Pelipuun solmuja käsitelty: {self.nodes_visited} kpl")
