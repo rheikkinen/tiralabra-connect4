@@ -1,5 +1,6 @@
 [run]
 source = src
 omit = src/tests/**,
+       src/ui/**,
        src/play.py,
        src/constants.py
