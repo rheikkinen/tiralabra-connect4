@@ -1,6 +1,4 @@
-from connect4 import ConnectFour
-
-connect4 = ConnectFour()
+from ui.cli import CLI as ui
 
 if __name__ == "__main__":
-    connect4.start_game()
+    ui().start_game()
