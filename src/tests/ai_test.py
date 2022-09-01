@@ -6,7 +6,7 @@ from ai import AI, MAX_SCORE, MIN_SCORE
 
 class TestAI(unittest.TestCase):
     """Yksikkötestit, jotka testaavat AI-luokan metodien eli pelitekoälyn toiminnallisuutta.
-    Minimax-algoritmin laskentasyvyys testeissä on 7."""
+    Minimax-algoritmin laskentasyvyys testeissä on oletuksena 8."""
     def setUp(self):
         """Alustusmetodi, jossa luodaan oliot pelilaudalle ja pelitekoälylle.
         Suoritetaan ennen jokaista testitapausta."""
