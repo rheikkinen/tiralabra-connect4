@@ -13,9 +13,9 @@ class CLI:
         self.ai_mode = False
 
         self.levels = {
-            0: "helpoin",
-            1: "keskitaso",
-            2: "vaikea"
+            1: "helpoin",
+            2: "keskitaso",
+            3: "vaikea"
         }
 
         self.player_discs = {
@@ -34,8 +34,8 @@ class CLI:
 
             if command == "1":
                 print("\nValitse pelitapa:")
-                print("1 = ihminen vs ihminen")
-                print("2 = ihminen vs tietokone")
+                print(">> 1 = ihminen vs ihminen")
+                print(">> 2 = ihminen vs tekoäly")
                 user_input = self.ask_input()
                 if user_input == "1":
                     self.ai_mode = False
@@ -52,11 +52,11 @@ class CLI:
     def choose_ai_level(self):
         while True:
             print("\nValitse tekoälypelaajan vaikeustaso:")
-            print("0 = helpoin")
-            print("1 = keskitaso")
-            print("2 = vaikea")
+            print(">> 1 = helpoin")
+            print(">> 2 = keskitaso")
+            print(">> 3 = vaikea")
             user_input = self.ask_input()
-            if user_input in ["0", "1", "2"]:
+            if user_input in ["1", "2", "3"]:
                 game.set_ai_level(int(user_input))
                 break
             else:
@@ -71,11 +71,11 @@ class CLI:
         print(numbers)
         for row in range(ROW_COUNT):
             row_to_print = "|"
-            for i in board[row]:
-                if i == 1:
-                    row_to_print += colored("X", "red")
-                elif i == 2:
-                    row_to_print += colored("O", "yellow")
+            for position in board[row]:
+                if position == 1:
+                    row_to_print += colored(self.player_discs[1], "red")
+                elif position == 2:
+                    row_to_print += colored(self.player_discs[2], "yellow")
                 else:
                     row_to_print += "_"
                 row_to_print += "|"
@@ -88,7 +88,7 @@ class CLI:
 
     def select_move(self, player):
         while True:
-            print(f"\nPelaaja {player} ({self.player_discs[player]}), valitse haluamasi sarake väliltä 1-7:")
+            print(f"\nPelaaja {player} ('{self.player_discs[player]}'), valitse sarake väliltä 1-7:")
             print("(Lopeta peli komennolla q)")
             user_input = self.ask_input()
             if user_input in ["q", "Q"]:
@@ -103,9 +103,9 @@ class CLI:
     def select_starting_player(self):
         while True:
             if self.ai_mode:
-                print("\nValitse aloittava pelaaja (1 = ihminen, 2 = tekoäly)\n")
+                print("\nValitse aloittava pelaaja (1 = ihminen, 2 = tekoäly)")
             else:
-                print("\nValitse aloittava pelaaja (1 tai 2)\n")
+                print("\nValitse aloittava pelaaja (1 tai 2)")
             
             user_input = self.ask_input()
 
@@ -116,9 +116,9 @@ class CLI:
 
     def print_endgame_message(self, game: ConnectFour):
         if game.game_ended_in_tie():
-            message = "Tasapeli!"
+            message = "\nTasapeli!"
         else:
-            message = f"Pelaaja {game.player_in_turn} voitti pelin!"
+            message = f"\nPelaaja {game.player_in_turn} voitti pelin!"
         print(colored(message, "green"))
 
     def new_game(self):
@@ -148,14 +148,13 @@ class CLI:
         print(colored(f"\n{message}\n", "red"))
 
     def ask_input(self):
-        return input(colored(">> ", "green"))
+        return input(colored("\n>> ", "green"))
 
     def print_stats(self):
         tie_count, player1_win_count, player2_win_count = game.results
-        print("Tulokset")
-        print("--------------------")
-        print(f"P1 voitot: {player1_win_count}")
-        print(f"P2 voitot: {player2_win_count}")
+        print("")
+        print(colored(f"P1 voitot: {player1_win_count}", "red"))
+        print(colored(f"P2 voitot: {player2_win_count}", "yellow"))
         print(f"Tasapelit: {tie_count}")
 
     def start_game(self):
@@ -166,18 +165,22 @@ class CLI:
             game.starting_player = self.select_starting_player()
             game.player_in_turn = game.starting_player
 
-            print(f"\nPeli alkoi. Tekoäly on pelaaja nro {game.ai.player()}\n")
-
+            if self.ai_mode:
+                print(f"\nPeli alkoi. Tekoäly on pelaaja nro {game.ai.player()}\n")
+            game.start_game()
             while not game.game_over:
                 self.print_board(game.board)
                 if game.player_in_turn != game.ai.player() or not self.ai_mode:
                     user_input = self.select_move(game.player_in_turn)
                     if self.quit:
+                        game.board.reset_board()
                         game.quit_game()
                     selected_column = user_input - 1
                 else:
                     print(f"\nPelaaja {game.player_in_turn} (tekoäly) valitsee sarakkeen.\n")
-                    selected_column, _, runtime = game.ai.best_column(game.board)
+                    selected_column, value, runtime = game.ai.best_column(game.board)
+                    print(colored(f"Tekoäly valitsi sarakkeen {selected_column + 1} pisteytyksellä {value}", "green"))
+
                     game.ai_times.append(runtime)
 
                 if game.board.column_is_available(selected_column):
@@ -187,11 +190,11 @@ class CLI:
                         self.print_endgame_message(game)
                         self.print_board(game.board)
                         self.print_stats()
+                        game.board.reset_board()
 
                         if self.new_game():
                             game.change_starting_player()
                             game.player_in_turn = game.starting_player
-                            game.board.reset_board()
                             continue
                         game.game_over = True
 
@@ -201,4 +204,5 @@ class CLI:
 
             if game.ai_times:
                 average_time = sum(game.ai_times) / len(game.ai_times)
-                print(f"\nTekoälyn suoritusaika keskimäärin: {average_time} sekuntia")
+                print(f"\nAlgoritmin suoritusaika keskimäärin: {round(average_time, 7)} sekuntia")
+                game.ai_times.clear()
