@@ -7,7 +7,7 @@ MAX_SCORE = 10_000_000
 MIN_SCORE = -10_000_000
 
 class AI:
-    def __init__(self, depth=7, player=2):
+    def __init__(self, depth=8, player=2):
         self.ai_player = player
         self.depth = depth
         self.opponent = (player % 2) + 1
@@ -38,8 +38,7 @@ class AI:
         runtime = time() - start_time
 
         print(f"Pelipuun solmuja käsitelty: {self.nodes_visited} kpl")
-        print(f"Minimax-algoritmin suoritusaika: {runtime} sekuntia\n")
-        print(f"Minimax valitsi sarakkeen {column + 1} pisteytyksellä {value}\n")
+        print(f"Algoritmin suoritusaika: {round(runtime, 8)} sekuntia\n")
 
         return column, value, runtime
 
@@ -187,6 +186,13 @@ class AI:
                 evaluation_block = [board.get_position(row-val, col+val) for val in range(4)]
 
                 value += self.get_block_value(evaluation_block)
+
+        # Keskisarakkeen bonus
+        for row in range(ROW_COUNT):
+            if board.get_position(row, column=3) == self.ai_player:
+                value +=2
+            elif board.get_position(row, column=3) == self.opponent:
+                value -=1
 
         return -value
 
