@@ -14,8 +14,13 @@ class GameBoard:
         self._moves_count = 0
 
     def init_board(self, rows: int, columns: int):
-        """Palauttaa 2-ulotteisen taulukon, joka on täytetty nollilla."""
-        return np.zeros((rows, columns), dtype=int)
+        """Palauttaa 2-ulotteisen taulukon (oletuskoko 7x6), joka on täytetty nollilla."""
+        return ([[0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0],
+                 [0,0,0,0,0,0,0]])
 
     def reset_board(self):
         """Palauttaa pelilaudan alkutilaan (kaikki ruudut tyhjiä eli arvoiltaan 0)."""
