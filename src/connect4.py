@@ -6,7 +6,7 @@ class ConnectFour:
     def __init__(self):
         self.board = GameBoard()
         self.ai = AI() # pylint: disable=invalid-name
-        self.ai_level = 2
+        self.ai_level = 3
         self.starting_player = 1
         self.player_in_turn = 1
         self.game_over = False
@@ -17,6 +17,9 @@ class ConnectFour:
     def quit_game(self):
         self.game_over = True
 
+    def start_game(self):
+        self.game_over = False
+
     def change_turn(self):
         self.player_in_turn = (self.player_in_turn % 2) + 1
 
@@ -25,11 +28,11 @@ class ConnectFour:
 
     def set_ai_level(self, level):
         self.ai_level = level
-        if level == 0:
-            self.ai.depth = 1
         if level == 1:
-            self.ai.depth = 4
+            self.ai.depth = 2
         if level == 2:
+            self.ai.depth = 4
+        if level == 3:
             self.ai.depth = 8
 
     def drop_disc(self, column, player):
