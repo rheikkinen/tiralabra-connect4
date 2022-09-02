@@ -8,7 +8,6 @@ from gameboard import GameBoard
 class CLI:
     """Komentorivikäyttöliittymä"""
     def __init__(self):
-        self.quit = False
         self.play = False
         self.ai_mode = False
 
@@ -92,9 +91,7 @@ class CLI:
             print("(Lopeta peli komennolla q)")
             user_input = self.ask_input()
             if user_input in ["q", "Q"]:
-                self.play = False
-                self.quit = True
-                return -1
+                return None
             elif self.is_valid_input(user_input):
                 return int(user_input)
             self.print_error("Virheellinen syöte!")
@@ -128,7 +125,6 @@ class CLI:
             if user_input in ["y", "Y"]:
                 return True
             if user_input in ["n", "N"]:
-                self.play = False
                 return False
             else:
                 self.print_error("Virheellinen syöte!")
@@ -151,10 +147,10 @@ class CLI:
         return input(colored("\n>> ", "green"))
 
     def print_stats(self):
-        tie_count, player1_win_count, player2_win_count = game.results
+        tie_count, first_player_win_count, second_player_win_count = game.results
         print("")
-        print(colored(f"P1 voitot: {player1_win_count}", "red"))
-        print(colored(f"P2 voitot: {player2_win_count}", "yellow"))
+        print(colored(f"P1 voitot: {first_player_win_count}", "red"))
+        print(colored(f"P2 voitot: {second_player_win_count}", "yellow"))
         print(f"Tasapelit: {tie_count}")
 
     def start_game(self):
@@ -167,15 +163,17 @@ class CLI:
 
             if self.ai_mode:
                 print(f"\nPeli alkoi. Tekoäly on pelaaja nro {game.ai.player()}\n")
-            game.start_game()
-            while not game.game_over:
+
+            while self.play:
                 self.print_board(game.board)
-                if game.player_in_turn != game.ai.player() or not self.ai_mode:
-                    user_input = self.select_move(game.player_in_turn)
-                    if self.quit:
+                if not self.ai_mode or game.player_in_turn != game.ai.player():
+                    selection_done = self.select_move(game.player_in_turn)
+                    if not selection_done: # Peli lopetettu
                         game.board.reset_board()
-                        game.quit_game()
-                    selected_column = user_input - 1
+                        self.play = False
+                        break
+                    else:
+                        selected_column = selection_done - 1
                 else:
                     print(f"\nPelaaja {game.player_in_turn} (tekoäly) valitsee sarakkeen.\n")
                     selected_column, value, runtime = game.ai.best_column(game.board)
@@ -196,7 +194,8 @@ class CLI:
                             game.change_starting_player()
                             game.player_in_turn = game.starting_player
                             continue
-                        game.game_over = True
+                        else:
+                            self.play = False
 
                     game.change_turn()
                 else:

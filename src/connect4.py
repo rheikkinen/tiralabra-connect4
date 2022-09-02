@@ -9,16 +9,9 @@ class ConnectFour:
         self.ai_level = 3
         self.starting_player = 1
         self.player_in_turn = 1
-        self.game_over = False
 
-        self.results = [0]*3
+        self.results = [0]*3 # Listaa pelin tulokset [tasapelit, p1 voitot, p2 voitot]
         self.ai_times = [] # Listaa tekoälyn suoritusajat
-
-    def quit_game(self):
-        self.game_over = True
-
-    def start_game(self):
-        self.game_over = False
 
     def change_turn(self):
         self.player_in_turn = (self.player_in_turn % 2) + 1
