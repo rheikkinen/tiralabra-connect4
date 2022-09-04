@@ -136,3 +136,4 @@ Uusi peli (y = kyllä / n = ei)?
 
 >> 
 ```
+Päävalikossa ohjelmasta voi poistua komennolla "q".
