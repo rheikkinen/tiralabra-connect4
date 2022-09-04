@@ -9,31 +9,26 @@
 ## Yksikkötestaus
 Yksikkötestit suoritetaan käyttäen pytestiä. Testit sijaitsevat hakemistossa [src/tests/](https://github.com/rheikkinen/tiralabra-connect4/tree/main/src/tests). Testien suorittaminen onnistuu projektin juurihakemistossa komennolla
 ```
-poetry run pytest
+poetry run inv test
 ```
 
 Yksikkötestausta on toteutettu kahdelle luokalle:
-- [GameBoard-luokalle](https://github.com/rheikkinen/tiralabra-connect4/blob/85a3ee4cff2e01c8c30b5b4d10c7df38432e1cd5/src/gameboard.py#L6), joka sisältää pelilaudan/peliruudukon käyttämät metodit
-- [AI-luokalle](https://github.com/rheikkinen/tiralabra-connect4/blob/85a3ee4cff2e01c8c30b5b4d10c7df38432e1cd5/src/ai.py#L7), joka sisältää pelitekoälyn käyttämät metodit ja algoritmit
+- [GameBoard-luokalle](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/gameboard.py), joka sisältää pelilautaan/peliruudukkoon kohdistuvat ja suuren osan pelilogiikasta toteuttavat metodit.
+- [AI-luokalle](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/ai.py), joka sisältää pelitekoälyn käyttämät metodit ja algoritmin.
 
 ### Testikattavuus 
 [![codecov](https://codecov.io/gh/rheikkinen/tiralabra-connect4/branch/main/graph/badge.svg?token=HXE9OXQ3R4)](https://codecov.io/gh/rheikkinen/tiralabra-connect4)
 
 Projektin testikattavuusraportti viedään automaattisesti Codecov-palveluun. Testikattavuutta pääsee tarkastelemaan klikkaamalla yllä olevaa codecov-merkkiä.
 
-#### Projektin testikattavuuden visualisointi käyttäen plotlya hyödyntävää [coverage-plot](https://pypi.org/project/coverage-plot/) -kirjastoa
-(Päivitetty 22.8.2022)
+#### Projektin testikattavuus kuvana
+![tiralabra_coverage_2022-09-04](https://user-images.githubusercontent.com/32366546/188325445-a340170c-49c8-4025-a794-4bf901308287.png)
 
-![tiralabra_coverage_2022-08-22](https://user-images.githubusercontent.com/32366546/185904366-d071e521-5b38-471f-8ad1-567241fbf76c.png)
-
-Huomioitavaa: 
-- Komentorivikäyttöliittymän ja osan pelilogiikasta sisältävää [connect4.py](https://github.com/rheikkinen/tiralabra-connect4/blob/85a3ee4cff2e01c8c30b5b4d10c7df38432e1cd5/src/connect4.py) -moduulia ei tällä hetkellä ole yksikkötestattu. Tiedoston peliogiikka hyödyntää kuitenkin täysin GameBoard-olion metodeja, joita on testattu.
+Huomioitavaa:
+- Pelilogiikan sisältävää [connect4.py](https://github.com/rheikkinen/tiralabra-connect4/blob/85a3ee4cff2e01c8c30b5b4d10c7df38432e1cd5/src/connect4.py) -moduulia ei tällä ole yksikkötestattu. Tiedoston peliogiikka hyödyntää enimmäkseen GameBoard-olion metodeja, jotka on testattu. Ja muut metodit on settereinä jätetty pois testeistä.
 
 ### Peliruudukon testaus
 Peliruudukon testauksessa tarkastetaan GameBoard-luokan metodien toiminnan oikeellisuus. Peliruudukon dokumentoidut testit löytyvät [täältä](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/tests/gameboard_test.py).
 
 ### Pelitekoälyn testaus
 Pelitekoälyn testauksessa tarkastetaan, että AI-luokan olio eli pelitekoäly tekee järkeviä siirtoja sille annetuissa pelitilanteissa, ja osaa pisteyttää pelitilanteet oikein. Tekoälyn dokumentoidut testit löytyvät [täältä](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/tests/ai_test.py).
-
-## Empiirinen testaus
-...
