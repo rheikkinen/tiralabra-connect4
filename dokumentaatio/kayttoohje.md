@@ -1,5 +1,5 @@
 # Käyttöohje
-Peli toimii ainoastaan paikallisesti käyttäjän omalla koneella, ja sitä käytetään koomentoriviltä. Ohjeet Connect 4 -pelin asentamiseen löytyvät [README:sta](https://github.com/rheikkinen/tiralabra-connect4#sovelluksen-k%C3%A4ytt%C3%B6%C3%B6notto).
+Peli toimii ainoastaan paikallisesti käyttäjän omalla koneella, ja sitä käytetään komentoriviltä. Ohjeet Connect 4 -pelin asentamiseen löytyvät [README:sta](https://github.com/rheikkinen/tiralabra-connect4#sovelluksen-k%C3%A4ytt%C3%B6%C3%B6notto).
 ## Käynnistys
 Peli käynnistetään komentoriviltä juurihakemistossa komennolla:
 ```
