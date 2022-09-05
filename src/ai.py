@@ -191,9 +191,9 @@ class AI:
         # Keskisarakkeen bonus
         for row in range(ROW_COUNT):
             if board.get_position(row, column=3) == self.ai_player:
-                value +=2
+                value +=5
             elif board.get_position(row, column=3) == self.opponent:
-                value -=1
+                value -=5
 
         return -value
 
