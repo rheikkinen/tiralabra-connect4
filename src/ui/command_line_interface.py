@@ -6,7 +6,7 @@ from constants import COLUMN_NUMBERS, ROW_COUNT
 from gameboard import GameBoard
 
 class CLI:
-    """Komentorivikäyttöliittymä"""
+    """Connect 4 -pelin komentorivikäyttöliittymä."""
     def __init__(self):
         self.play = False
         self.ai_mode = False
