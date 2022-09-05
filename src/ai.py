@@ -7,6 +7,7 @@ MAX_SCORE = 10_000_000
 MIN_SCORE = -10_000_000
 
 class AI:
+    """Luokan vastuulla on pelitekoälyn tarvitsemat metodit."""
     def __init__(self, depth=8, player=2):
         self.ai_player = player
         self.depth = depth
@@ -19,11 +20,10 @@ class AI:
 
     def best_column(self, board: GameBoard):
         """Valitsee pelitekoälylle seuraavaksi tehtävän siirron käyttäen
-        minimax-algoritmia. Tekoälylle määritetty syvyys (depth) vaikuttaa
+        minimax-algoritmia. Tekoälylle määritetty syvyys (depth) vaikuttaa algoritmin
         laskentasyvyyteen eli siihen, kuinka monta siirtoa algoritmi laskee eteenpäin.
 
         :param board: Peliruudukko GameBoard-luokan oliona
-        :param depth: Laskentasyvyys minimax algoritmille. Jos tyhjä, käytetään oletussyvyyttä 7.
 
         :rtype: tuple
         :return: Palauttaa valitun sarakkeen indeksin, siirrolle lasketun pisteytyksen
@@ -66,10 +66,10 @@ class AI:
 
         if self.player_wins_next_move(board, player_in_turn):
             if maximizing:
-                # Maksimoivan pelaajan voitto
+                # Päätössolmu, maksimoivan pelaajan voitto
                 win_value = MAX_SCORE * (depth+1)
             else:
-                # Minimoivan pelaajan voitto
+                # Päätössolmu, minimoivan pelaajan voitto
                 win_value = MIN_SCORE * (depth+1)
             return win_value, self._winning_move
 
@@ -146,7 +146,8 @@ class AI:
 
     def evaluate_board(self, board: GameBoard):
         """Pisteytysfunktio, joka käy läpi koko peliruudukon ja pisteyttää pelitilanteen
-        tekoälypelaajan (minimoiva pelaaja) kannalta.
+        tekoälypelaajan (minimoiva pelaaja) kannalta. Peliruudukko jaetaan neljän peräkkäisen ruudun
+        lohkoihin, joista jokainen pisteytetään.
 
         :param board: Peliruudukko GameBoard-luokan oliona
 
@@ -199,7 +200,8 @@ class AI:
     def get_block_value(self, block: list):
         """Pisteyttää neljän ruudun kokoisen lohkon tekoälypelaajan kannalta.
         Lohko on lista, joka sisältää neljän peräkkäisen ruudun arvot vaaka-, pysty-
-        tai vinosuunnassa.
+        tai vinosuunnassa. Esimerkiksi jos lohkossa on 3 omaa kiekkoa ja yksi tyhjä ruutu,
+        on mahdollisuus voittoon, mistä saa parhaan pistemäärän.
 
         :param block: Pisteytettävä lohko
 
