@@ -24,12 +24,14 @@ Erilliseen [`constants.py`](https://github.com/rheikkinen/tiralabra-connect4/blo
 
 Ohjelma käynnistetään komentoriviltä suorittamalla tiedosto [`play.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/play.py).
 
+Yksikkötestit löytyvät hakemistosta `src/tests`.
+
 ## Pelitekoälyn toiminta
 Pelitekoälyn toteutuksessa on käytetty minimax-algoritmia ja alfa-beta -karsintaa. Luokan AI metodi `best_column` saa parametrina pelilaudan tilanteen `GameBoard`-oliona sekä laskentasyvyyden (kuinka monen siirron päähän halutaan laskea). Metodi suorittaa alfa-beta -karsintaa käyttävän `minimax`-algoritmin metodin, joka käy pelipuuta rekursiivisesti annettuun laskentasyvyyteen saakka ja palauttaa parhaaksi arvioidun sarakkeen.
 
 Ilman alfa-beta-karsintaa minimax-algoritmi käy läpi koko pelipuun kaikki solmut. Koska läpi käytävän pelipuun solmujen määrä kasvaa eksponentiaalisesti mitä syvemmälle pelipuuta tutkitaan[^1], pelkästään minimax-algoritmia käyttäen laskentasyvyyden tuli olla korkeintaan 4, jotta algoritmi toimi aina tehokkaasti. Tehokkuus määritettiin projektissa niin, että tekoälyn katsottiin toimivan tehokkaasti, kun se valitsi siirtonsa keskimäärin alle 3 sekunnissa. Ehdotonta yläräjaa ei kuitenkaan ollut, ja erityisessä asemassa olikin pelaamisen sujuvuus, eli että peliä pelatessa tekoäly valitsee siirtonsa useimmiten parissa sekunnissa, eikä siirron tekemistä tarvitse toistamiseen odotella esimerkiksi yli 5 sekuntia.
 
-Alfa-beta-karsinnan avulla läpi käytävää pelipuuta saatiin karsittua pienemmäksi, ja algoritmin laskenta-aika parantui merkittävästi. Viimeisimpien tehostusten jälkeen laskentasyvyyden pystyi nostamaan 8:aan laskenta-ajan pysyessä keskimäärin 2-3 sekunnissa. Satunnaisesti jonkin siirron laskemiseen saattaa algoritmilta kulua 5-8 sekuntia, mikä johtuu mm. melko yksinkertaisesta heuristiikka-/pisteytysmetodista, jossa variaatiota pelitilanteiden pisteytyksiin tulee kovin vähän.
+Alfa-beta-karsinnan avulla läpi käytävää pelipuuta saatiin karsittua pienemmäksi, ja algoritmin laskenta-aika parantui merkittävästi. Viimeisimpien tehostusten jälkeen laskentasyvyyden pystyi nostamaan 8:aan laskenta-ajan pysyessä keskimäärin 1-3 sekunnissa. Siirron laskemiseen saattaa ajoittain edelleen kulua jopa yli 5 sekuntia, mikä johtunee mm. melko yksinkertaisesta heuristiikka-/pisteytysmetodista, jossa variaatiota pelitilanteiden pisteytyksiin tulee kovin vähän. Kuitenkin viimeisimmän lisäyksen jälkeen, kun pelitilanteen pisteytyksessä nostettiin keskisarakkeen arvoa korkeammaksi (mitä useampi pelaajan/vastustajan kiekko on keskisarakkeessa, sitä korkeammat/matalammat pisteet), algoritmin suoritusaika vaikuttaa pysyvän tasaisesti noin parissa sekunnissa.
 
 ### Minimax-algoritmin toteutus
 Huomioitavaa:
@@ -82,14 +84,32 @@ minimax(GameBoard, alpha, beta, depth, maximizing):
         # Palauta paras arvo (minimiarvo) ja arvoa vastaava siirto (sarake)
         return min_value, best_move
 ```
+## Saavutetut aikavaativuudet
+Yllä olevan minimax-algoritmin toteutuksessa aikavaativuus riippuu laskentasyvyydestä, ja tässä toteutuksessa päästiin korkeimmillaan laskentasyvyyteen 8. Haarautumiskerroin eli pelivuoron mahdollisten siirtojen lukumäärä on pelin alkuvaiheessa 7 ja pienenee, kun jokin sarakkeista täyttyy. Huonoimmassa tapauksessa, kun karsintaa ei tapahdu juuri ollenkaan, ja kaikki haarat käydään läpi, algoritmin aikavaativuus on O(h^s), missä h on haarautumiskerroin ja s on läpikäytävän pelipuun syvyys. Optimitilanteessa toteutetun alfa-beta -karsinnan avulla haarautumiskerroin pysyy samana, mutta läpikäytävä pelipuu pienenee jonkin verran, kun jokaista haaraa ei tarkasteta. Parhaassa tapauksessa alfa-beta -karsinnan avulla syvyys s pienenisi puoleen (s/2)[^2]. Tässä toteutuksessa optimointia on tehty melko vähän, joten käytännössä ei ole mahdollista päästä täysin parhaaseen tulokseen, missä kaikki siirrot valittaisiin optimaalisessa järjestyksessä niin, että haaroja saataisiin edes lähes jokaisella kerralla karsittua. 
+
+Muita aikavaativuuksia algoritmin toteutuksessa:
+- Tasapelin tarkastus (board_is_full)
+    - Lineaarinen O(n), missä n on sarakkeiden lukumäärä
+    - Tarkastaa huonoimmassa tapauksessa jokaisen sarakkeen ylimmän ruudun
+- Pelaajan voiton tarkastus (player_wins_next_move)
+    - Lineaarinen O(n), missä n on vapaiden sarakkeiden lukumäärä
+- Pelilaudan pisteytys, kun laskentasyvyys on saavutettu (depth = 0)
+    - Koko peliruudukko käydään läpi
+    - Neliöllinen O(n^2)
 
 ## Kehitysehdotuksia
-- Pelitekoälyn toiminnan tehostukseen lukuisia menetelmiä, mm:
+- Pelitekoälyn minimax-algoritmin toiminnan tehostukseen on lukuisia menetelmiä[^3][^4], joista osa voisi olla melko yksinkertaisia toteuttaa, mm:
     - Käsiteltyjen ja pisteytettyjen pelitilanteiden tallettaminen muistiin, millä vältytään saman pelitilanteen toistuvalta pisteyttämiseltä 
     - Pelitilanteiden peilaus
-    - Siirtojen paremmuusjärjestyksen päivittämistä
+    - Parempi siirtojen optimointi ja järjestäminen paremmuusjärjestykseen
         - Nyt siirrot tarkastetaan aina keskimmäisestä sarakkeesta reunimmaiseen 
     - Iteratiivisesti syventäminen, algoritmin suoritukselle maksimiaika
-- Pelille voisi lisätä graafisen käyttöliittymän sen kokeilua helpottamiseksi
+- Pelille voisi lisätä myös graafisen käyttöliittymän sen kokeilua helpottamiseksi
 
 [^1]: Hautalahti Joona, [Vahvistusoppimis- ja minimax-agentin vertailu ristinollan avulla](https://trepo.tuni.fi/bitstream/handle/10024/131377/HautalahtiJoona.pdf?sequence=2&isAllowed=y), Pro gradu -tutkielma, huhtikuu 2021
+
+[^2]: Hussain Syed, Hameed Usman, [Minimax with alpha-beta pruning (Connect-4 game)](https://www.academia.edu/41561708/Minimax_with_alpha_beta_pruning_connect_4_game_) (haettu 5.9.2022)
+
+[^3]: Wächter Lars, [Improving Minimax performance](https://dev.to/larswaechter/improving-minimax-performance-1924) (haettu 5.9.2022)
+
+[^4]: Kotilainen Jukka, [Hakumenetelmien vertailua myllypelissä](https://www.theseus.fi/bitstream/handle/10024/749051/Kotilainen_Jukka.pdf?sequence=2), Tieto- ja viestintätekniikan insinöörityö, 5.5.2022
