@@ -11,7 +11,6 @@ class GameBoard:
         self._board = self.init_board(self.rows, self.columns)
         self._winning_row = winning_row
         self._last_move = None, None, None
-        self._moves_count = 0
 
     def init_board(self, rows: int, columns: int):
         """Palauttaa 2-ulotteisen taulukon (oletuskoko 7x6), joka on täytetty nollilla."""
@@ -25,7 +24,6 @@ class GameBoard:
     def reset_board(self):
         """Palauttaa pelilaudan alkutilaan (kaikki ruudut tyhjiä eli arvoiltaan 0)."""
         self._board = self.init_board(self.rows, self.columns)
-        self._moves_count = 0
 
     def set_game_situation(self, game_situation: np.ndarray):
         """Testauksessa pelitilanteen määrittämiseen käytettävä metodi, joka
@@ -50,13 +48,11 @@ class GameBoard:
         tallettaa siirron tiedot muuttajaan ja kasvattaa siirtojen määrää yhdellä."""
         self._board[row][column] = value
         self.store_last_move(row, column, value)
-        self._moves_count += 1
 
     def clear_position(self, row: int, column: int):
         """Tyhjentää ruudun eli asettaa ruudun arvon nollaksi parametrina
         annetussa sijainnissa ja vähentää siirtojen määrää yhdellä."""
         self._board[row][column] = EMPTY
-        self._moves_count -= 1
 
     def get_position(self, row: int, column: int):
         """Palauttaa parametrina annetussa sijainnissa olevan ruudun arvon."""
@@ -112,13 +108,13 @@ class GameBoard:
         :rtype: bool
         :return: Palauttaa True, jos siirto on voittava siirto. Muuten palauttaa False.
         """
-        return self.check_horizontal_discs(row, column, player) \
-            or self.check_vertical_discs(row, column, player) \
-            or self.check_positive_diagonal(row, column, player) \
-            or self.check_negative_diagonal(row, column, player)
+        return self.check_horizontal_win(row, column, player) \
+            or self.check_vertical_win(row, column, player) \
+            or self.check_positive_diagonal_win(row, column, player) \
+            or self.check_negative_diagonal_win(row, column, player)
 
-    def check_horizontal_discs(self, last_row: int, last_col: int, player_disc: int):
-        """Tarkastaa, muodostaako pudotettu kiekko vaakasuunnassa voittavan
+    def check_horizontal_win(self, last_row: int, last_col: int, player_disc: int):
+        """Tarkastaa, muodostaako annettu siirto vaakasuunnassa voittavan
         kiekkojonon (oletus 4 kiekkoa). Palauttaa True, jos voittava jono löytyy.
         Muuten palauttaa False."""
         discs_in_a_row = 1
@@ -143,8 +139,8 @@ class GameBoard:
 
         return False
 
-    def check_vertical_discs(self, last_row: int, last_col: int, player_disc: int):
-        """Tarkastaa, muodostaako pudotettu kiekko pystysuunnassa voittavan
+    def check_vertical_win(self, last_row: int, last_col: int, player_disc: int):
+        """Tarkastaa, muodostaako annettu siirto pystysuunnassa voittavan
         kiekkojonon (oletus 4 kiekkoa). Palauttaa True, jos voittava jono löytyy.
         Muuten palauttaa False."""
         discs_in_a_row = 1
@@ -160,8 +156,8 @@ class GameBoard:
 
         return False
 
-    def check_positive_diagonal(self, last_row: int, last_col: int, player_disc: int):
-        """Tarkastaa, muodostaako pudotettu kiekko vinottain (nouseva suunta)
+    def check_positive_diagonal_win(self, last_row: int, last_col: int, player_disc: int):
+        """Tarkastaa, muodostaako annettu siirto vinottain (nouseva suunta)
         voittavan kiekkojonon (oletus 4 kiekkoa). Palauttaa True, jos voittava
         jono löytyy. Muuten paluttaa False."""
         discs_in_a_row = 1
@@ -188,8 +184,8 @@ class GameBoard:
 
         return False
 
-    def check_negative_diagonal(self, last_row: int, last_col: int, player_disc: int):
-        """Tarkastaa, muodostaako pudotettu kiekko vinottain (laskeva suunta)
+    def check_negative_diagonal_win(self, last_row: int, last_col: int, player_disc: int):
+        """Tarkastaa, muodostaako annettu siirto vinottain (laskeva suunta)
         voittavan kiekkojonon (oletus 4 kiekkoa). Palauttaa True, jos voittava
         jono löytyy. Muuten palauttaa False."""
         discs_in_a_row = 1
