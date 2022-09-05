@@ -14,12 +14,15 @@ class ConnectFour:
         self.ai_times = [] # Listaa tekoälyn suoritusajat
 
     def change_turn(self):
+        """Vaihtaa pelivuorossa olevan pelaajan."""
         self.player_in_turn = (self.player_in_turn % 2) + 1
 
     def change_starting_player(self):
+        """Vaihtaa pelin aloittavan pelaajan."""
         self.starting_player = (self.starting_player % 2) + 1
 
     def set_ai_level(self, level):
+        """Asettaa vaikeustason (laskentasyvyyden) tekoälypelaajalle."""
         self.ai_level = level
         if level == 1:
             self.ai.depth = 2
@@ -29,6 +32,7 @@ class ConnectFour:
             self.ai.depth = 8
 
     def drop_disc(self, column, player):
+        """Pudottaa pelaajan pelikiekon annetun sarakkeen alimpaan vapaaseen ruutuun."""
         row = self.board.get_next_available_row(column)
         self.board.update_position(row, column, value=player)
 
@@ -37,9 +41,10 @@ class ConnectFour:
         return self.board.column_is_available(column)
 
     def game_ended_in_tie(self):
-        """Palauttaa True, jos kaikki sarakkeet ovat täynnä, muuten palauttaa False."""
+        """Palauttaa True, jos pelilaudan kaikki sarakkeet ovat täynnä.
+        Muuten palauttaa False."""
         if self.board.board_is_full():
-            self.results[0] += 1
+            self.results[0] += 1 # Lisätään tuloksiin tasapeli (indeksi 0)
             return True
         return False
 
@@ -48,7 +53,7 @@ class ConnectFour:
         kiekkojen kanssa voittavan kiekkojonon. Muuten palauttaa False."""
         row, column, player = self.board.get_last_move()
         if self.board.check_for_win(row, column, player):
-            self.results[player] += 1
+            self.results[player] += 1 # Lisätään tuloksiin pelaajan voitto (indeksi pelaajan nro)
             return True
         return False
 
