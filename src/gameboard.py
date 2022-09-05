@@ -44,14 +44,14 @@ class GameBoard:
         return self._last_move
 
     def update_position(self, row: int, column: int, value: int):
-        """Asettaa parametrina annetun arvon annettuihin koordinaatteihin,
-        tallettaa siirron tiedot muuttajaan ja kasvattaa siirtojen määrää yhdellä."""
+        """Asettaa parametrina annetun arvon annettuihin koordinaatteihin
+        ja tallettaa siirron tiedot muuttujaan."""
         self._board[row][column] = value
         self.store_last_move(row, column, value)
 
     def clear_position(self, row: int, column: int):
         """Tyhjentää ruudun eli asettaa ruudun arvon nollaksi parametrina
-        annetussa sijainnissa ja vähentää siirtojen määrää yhdellä."""
+        annetussa sijainnissa."""
         self._board[row][column] = EMPTY
 
     def get_position(self, row: int, column: int):
@@ -59,7 +59,7 @@ class GameBoard:
         return self._board[row][column]
 
     def column_is_available(self, column: int):
-        """Tarkastaa, onko sarake vapaa.
+        """Tarkastaa, onko annettu sarake vapaa.
 
         :param column: Tarkastettava sarake
 
