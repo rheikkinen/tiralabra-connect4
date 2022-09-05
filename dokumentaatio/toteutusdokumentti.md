@@ -18,11 +18,11 @@ Ohjelma on jaettu sen toiminnan kannalta neljään merkittävään moduuliin:
 - [`connect4.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/connect4.py) keskittyy pelilogiikkaa suorittaviin metodeihin, joista suurin osa käyttää `GameBoard`-olion metodeja pelilaudan päivittämiseen ja pelitilanteen hakemiseen.
 - [`gameboard.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/gameboard.py) sisältää pelissä käytettävän pelilautaolion ja sen metodit, jotka pitävät yllä pelilaudan tilannetta ja toteuttavat suurimman osan pelilogiikasta.
 - [`ai.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/ai.py) sisältää pelitekoälyn toiminnallisuudet, joista tärkeimpänä minimax-algoritmi, jonka avulla lasketaan tekoälypelaajan seuraavaksi tehtävä siirto.
-- [`ui/command_line_interface.py`] sisältää pelin komentorivikäyttöliittymän.
+- [`ui/command_line_interface.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/ui/command_line_interface.py) sisältää pelin komentorivikäyttöliittymän.
 
-Erilliseen [`constants.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/c60adfb997e4172bd5e263598fd00a1d26945109/src/constants.py) -tiedostoon on talletettu ohjelmakoodissa usein käytettäviä vakioarvoja ja -tietorakenteita.
+Erilliseen [`constants.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/constants.py) -tiedostoon on talletettu ohjelmakoodissa usein käytettäviä vakioarvoja ja -tietorakenteita.
 
-Ohjelma käynnistetään komentoriviltä suorittamalla tiedosto [`play.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/c60adfb997e4172bd5e263598fd00a1d26945109/src/play.py).
+Ohjelma käynnistetään komentoriviltä suorittamalla tiedosto [`play.py`](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/play.py).
 
 ## Pelitekoälyn toiminta
 Pelitekoälyn toteutuksessa on käytetty minimax-algoritmia ja alfa-beta -karsintaa. Luokan AI metodi `best_column` saa parametrina pelilaudan tilanteen `GameBoard`-oliona sekä laskentasyvyyden (kuinka monen siirron päähän halutaan laskea). Metodi suorittaa alfa-beta -karsintaa käyttävän `minimax`-algoritmin metodin, joka käy pelipuuta rekursiivisesti annettuun laskentasyvyyteen saakka ja palauttaa parhaaksi arvioidun sarakkeen.
@@ -84,8 +84,12 @@ minimax(GameBoard, alpha, beta, depth, maximizing):
 ```
 
 ## Kehitysehdotuksia
+- Pelitekoälyn toiminnan tehostukseen lukuisia menetelmiä, mm:
+    - Käsiteltyjen ja pisteytettyjen pelitilanteiden tallettaminen muistiin, millä vältytään saman pelitilanteen toistuvalta pisteyttämiseltä 
+    - Pelitilanteiden peilaus
+    - Siirtojen paremmuusjärjestyksen päivittämistä
+        - Nyt siirrot tarkastetaan aina keskimmäisestä sarakkeesta reunimmaiseen 
+    - Iteratiivisesti syventäminen, algoritmin suoritukselle maksimiaika
 - Pelille voisi lisätä graafisen käyttöliittymän sen kokeilua helpottamiseksi
-- Samalla pelin toimintalogiikan ja käyttöliittymän voisi erotella toisistaan paremmin
-
 
 [^1]: Hautalahti Joona, [Vahvistusoppimis- ja minimax-agentin vertailu ristinollan avulla](https://trepo.tuni.fi/bitstream/handle/10024/131377/HautalahtiJoona.pdf?sequence=2&isAllowed=y), Pro gradu -tutkielma, huhtikuu 2021
