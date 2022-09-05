@@ -27,7 +27,7 @@ Sovellus toimii ainoastaan paikallisesti käyttäjän omalla tietokoneella, ja s
 Varmista, että koneellesi on asennettu Poetry. Voit tehdä sen komennolla 
 `poetry --version`, jolloin pitäisi tulostua asennettu versio. Jos Poetrya ei ole asennettu, voit asentaa sen esimerkiksi [Ohjelmistotekniikka-kurssin ohjeella](https://ohjelmistotekniikka-hy.github.io/python/viikko2#asennus).
 
-1. Lataa [uusin release](https://github.com/rheikkinen/tiralabra-connect4/releases/tag/viikko6-v2) zip-tiedostona koneellesi ja pura tiedosto haluamaasi hakemistoon. Syntyy oletuksena hakemisto `tiralabra-connect4-viikko6-v2`. Tämä on projektin juurihakemisto, ja seuraavat komentorivikomennot tulee tehdä tässä hakemistossa.
+1. Lataa [uusin release](https://github.com/rheikkinen/tiralabra-connect4/releases/tag/v1.0.1) esimerkiksi zip-tiedostona koneellesi ja pura tiedosto haluamaasi hakemistoon. Syntyy oletuksena hakemisto `tiralabra-connect4-1.0.1`, joka on projektin juurihakemisto. Seuraavat komentorivikomennot tulee tehdä tässä hakemistossa.
 
 2. Asenna projektin riippuvuudet suorittamalla komento:
 ```
