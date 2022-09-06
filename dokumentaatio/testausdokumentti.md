@@ -25,7 +25,7 @@ Projektin testikattavuusraportti viedään automaattisesti Codecov-palveluun. Te
 ![tiralabra_coverage_2022-09-04](https://user-images.githubusercontent.com/32366546/188325445-a340170c-49c8-4025-a794-4bf901308287.png)
 
 Huomioitavaa:
-- Pelilogiikan sisältävää [connect4.py](https://github.com/rheikkinen/tiralabra-connect4/blob/85a3ee4cff2e01c8c30b5b4d10c7df38432e1cd5/src/connect4.py) -moduulia ei tällä hetkellä ole yksikkötestattu, koska tiedoston peliogiikka hyödyntää enimmäkseen GameBoard-olion metodeja, jotka on testattu. Ja muut metodit on settereinä jätetty pois testeistä.
+- Pelilogiikan sisältävää [connect4.py](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/connect4.py) -moduulia ei tällä hetkellä ole yksikkötestattu, koska tiedoston peliogiikka hyödyntää enimmäkseen GameBoard-olion metodeja, jotka on testattu. Ja muut metodit on settereinä jätetty pois testeistä.
 
 ### Peliruudukon yksikkötestit
 Peliruudukon yksikkötestauksessa tarkastetaan pelilautaan kohdistuvien metodien eli GameBoard-luokan metodien toiminnan oikeellisuus. Testitapauksissa pelilaudalle asetetaan valmis pelitilanne GameBoard-luokan metodilla `set_game_situation`. Peliruudukon dokumentoidut testit löytyvät [täältä](https://github.com/rheikkinen/tiralabra-connect4/blob/main/src/tests/gameboard_test.py).
